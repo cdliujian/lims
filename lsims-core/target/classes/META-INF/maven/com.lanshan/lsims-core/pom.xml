@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.lanshan</groupId>
+    <artifactId>LSIMS-Parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    
+  </parent>
+  <groupId>com.lanshan</groupId>
+  <artifactId>lsims-core</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>lsims-core</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>src</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.5.1</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      
+       <plugin>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-maven-plugin</artifactId>
+		    <configuration>
+		        <skip>true</skip>
+		    </configuration>
+		</plugin>
+    </plugins>
+  </build>
+  
+  <dependencies>
+    <dependency>
+		<groupId>org.springframework.cloud</groupId>
+		<artifactId>spring-cloud-starter-security</artifactId>
+	</dependency>
+	<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-jdbc</artifactId>
+	</dependency>
+	<dependency>
+	  <groupId>com.bstek.dorado</groupId>
+	  <artifactId>dorado-core</artifactId>
+	  <version>7.6.1-SNAPSHOT</version>
+	</dependency>
+	<dependency>
+       <groupId>org.wltea.analyzer</groupId>
+       <artifactId>IKAnalyzer</artifactId>
+       <version>3.2</version>
+    </dependency>
+    <dependency>
+       <groupId>org.apache.lucene</groupId>
+       <artifactId>lucene-core</artifactId>
+       <version>6.3.0</version>
+    </dependency>
+    <dependency>
+	  <groupId>com.bstek.dorado</groupId>
+	  <artifactId>dorado-hibernate4</artifactId>
+	  <version>1.2.4</version>
+	</dependency>
+  </dependencies>
+  
+  
+  <repositories>
+    <repository>
+      <id>bsdn-maven-repository</id>
+      <url>http://nexus.bsdn.org/content/groups/public/</url>
+    </repository>
+  </repositories>
+  
+ 
+</project>

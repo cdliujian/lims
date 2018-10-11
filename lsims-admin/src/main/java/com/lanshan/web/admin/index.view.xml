@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeResult">
+      <Property name="creationType">com.lanshan.web.admin.model.SmUser</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="username">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="address">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="cname">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="administrator">
+        <Property/>
+        <Property name="label">0：否  1：是</Property>
+      </PropertyDef>
+      <PropertyDef name="birthday">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="deptId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="createDate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="email">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="enabled">
+        <Property/>
+        <Property name="label">0：否  1：是</Property>
+      </PropertyDef>
+      <PropertyDef name="ename">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="male">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="mobile">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="password">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="salt">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="lastUpdatePerson">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="lastUpdateTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="weixinOpenId">
+        <Property/>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <Container>
+      <Button>
+        <Property name="action">ajaxAction1</Property>
+        <Property name="caption">提交</Property>
+      </Button>
+      <DataGrid>
+        <Property name="dataSet">dataSetResult</Property>
+        <DataColumn name="id">
+          <Property name="property">id</Property>
+        </DataColumn>
+        <DataColumn name="username">
+          <Property name="property">username</Property>
+        </DataColumn>
+        <DataColumn name="address">
+          <Property name="property">address</Property>
+        </DataColumn>
+        <DataColumn name="cname">
+          <Property name="property">cname</Property>
+        </DataColumn>
+        <DataColumn name="administrator">
+          <Property name="property">administrator</Property>
+        </DataColumn>
+        <DataColumn name="birthday">
+          <Property name="property">birthday</Property>
+        </DataColumn>
+        <DataColumn name="deptId">
+          <Property name="property">deptId</Property>
+        </DataColumn>
+        <DataColumn name="createDate">
+          <Property name="property">createDate</Property>
+        </DataColumn>
+        <DataColumn name="email">
+          <Property name="property">email</Property>
+        </DataColumn>
+        <DataColumn name="enabled">
+          <Property name="property">enabled</Property>
+        </DataColumn>
+        <DataColumn name="ename">
+          <Property name="property">ename</Property>
+        </DataColumn>
+        <DataColumn name="male">
+          <Property name="property">male</Property>
+        </DataColumn>
+        <DataColumn name="mobile">
+          <Property name="property">mobile</Property>
+        </DataColumn>
+        <DataColumn name="password">
+          <Property name="property">password</Property>
+        </DataColumn>
+        <DataColumn name="salt">
+          <Property name="property">salt</Property>
+        </DataColumn>
+        <DataColumn name="lastUpdatePerson">
+          <Property name="property">lastUpdatePerson</Property>
+        </DataColumn>
+        <DataColumn name="lastUpdateTime">
+          <Property name="property">lastUpdateTime</Property>
+        </DataColumn>
+        <DataColumn name="weixinOpenId">
+          <Property name="property">weixinOpenId</Property>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <AjaxAction id="ajaxAction1">
+      <Property name="service">smUserCotroller#save</Property>
+      <Property name="confirmMessage">确定提交吗?</Property>
+    </AjaxAction>
+    <DataSet id="dataSetResult">
+      <Property name="pageSize">15</Property>
+      <Property name="dataType">[dataTypeResult]</Property>
+      <Property name="dataProvider">smUserCotroller#loadQueryResult</Property>
+    </DataSet>
+  </View>
+</ViewConfig>

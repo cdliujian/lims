@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtRegion">
+      <Property name="creationType">com.lanshan.web.admin.model.SmRegion</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="regionName"/>
+      <PropertyDef name="parentId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="regionType"/>
+      <PropertyDef name="regionCode"/>
+      <Reference name="parent">
+        <Property name="dataProvider">smRegionCotroller#getParentRegionById</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="id">$${this.id}</Property>
+        <Property name="id">$${this.id}</Property>
+        <Property name="id">$${this.id}</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="id">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+      <Reference name="childs">
+        <Property name="dataProvider">smRegionCotroller#getChildsById</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">window.recordSelectd = function() {&#xD;
+	var dataTree = self.id(&quot;dataTree&quot;);	&#xD;
+    var record = dataTree.get(&quot;currentEntity&quot;);&#xD;
+    return record;&#xD;
+};</ClientEvent>
+    <DataSet id="datasetQueryResult">
+      <Property name="dataProvider">smRegionCotroller#loadQueryResult</Property>
+      <Property name="dataType">[dtRegion]</Property>
+      <Property name="parameter">
+        <Entity>
+          <Property name="parentIdIsNull">true</Property>
+        </Entity>
+      </Property>
+    </DataSet>
+    <DataTree id="dataTree">
+      <Property name="dataSet">datasetQueryResult</Property>
+      <Property name="selectionMode">singleRow</Property>
+      <BindingConfigs>
+        <BindingConfig>
+          <Property name="autoCheckChildren">false</Property>
+          <Property name="labelProperty">regionName</Property>
+          <Property name="recursive">true</Property>
+          <Property name="childrenProperty">childs</Property>
+        </BindingConfig>
+      </BindingConfigs>
+    </DataTree>
+  </View>
+</ViewConfig>

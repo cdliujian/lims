@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Property name="metaData">
+    <Property name="securityTag">Base.Common</Property>
+  </Property>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <ClientEvent name="onReady">var p={};&#xD;
+var ap={};&#xD;
+ap.auditEntity={};&#xD;
+ap.auditId=&quot;1&quot;;&#xD;
+&#xD;
+p.appParam=ap;&#xD;
+&#xD;
+view.id(&quot;dialogAudit&quot;).show(p); &#xD;
+  </ClientEvent>
+    <Dialog id="dialogAudit">
+      <ClientEvent name="onReady"> &#xD;
+self._$doShow = self.doShow;&#xD;
+self.doShow = function(o)&#xD;
+{  &#xD;
+	if(o.caption){&#xD;
+        self.set(&quot;width&quot;,o.caption);&#xD;
+    }&#xD;
+	if(o.width){&#xD;
+		self.set(&quot;width&quot;,o.width);&#xD;
+	}&#xD;
+	if(o.height){&#xD;
+		self.set(&quot;height&quot;,o.height);&#xD;
+	} &#xD;
+	&#xD;
+	var dataset =  view.id(&quot;dsAudit&quot;);&#xD;
+	if(o.appParam){		&#xD;
+		dataset.set(&quot;parameter&quot;,o.appParam);&#xD;
+	}&#xD;
+    dataset.flushAsync();&#xD;
+  //  dataset.flush(); &#xD;
+	this._$doShow(o);	&#xD;
+};&#xD;
+&#xD;
+</ClientEvent>
+      <Property name="center">true</Property>
+      <Property name="height">400</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">800</Property>
+      <Property name="caption">审计日志</Property>
+      <Buttons>
+        <Button id="buttonAuditClose">
+          <ClientEvent name="onClick">var dialog = this.id(&quot;dialogAudit&quot;);&#xD;
+dialog.hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataPilot>
+          <Property name="dataSet">dsAudit</Property>
+        </DataPilot>
+        <DataSet id="dsAudit">
+          <Property name="dataProvider">auditLogAction#queryByPage</Property>
+          <Property name="pageSize">${SmHelper.getPreferencePageSize()}</Property>
+          <Property name="loadMode">manual</Property>
+          <Property name="dataType">[Map]</Property>
+        </DataSet>
+        <DataGrid id="dataGridAudit">
+          <ClientEvent name="onDataRowDoubleClick">var record = this.id(&quot;dsAudit&quot;).getData(&quot;#&quot;);  &#xD;
+var p={};&#xD;
+p.auditEntity=record; &#xD;
+view.id(&quot;dialogAuditItem&quot;).show(p); &#xD;
+</ClientEvent>
+          <Property name="dataSet">dsAudit</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="showFilterBar">false</Property>
+          <Property name="filterMode">serverSide</Property>
+          <DataColumn>
+            <Property name="caption">操作时间</Property>
+            <Property name="property">operateTime</Property>
+            <Property name="width">80</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="caption">类型</Property>
+            <Property name="property">operateType</Property>
+            <Property name="width">30</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">entityChanges</Property>
+            <Property name="caption">变化内容</Property>
+            <Editor/>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+    </Dialog>
+    <Dialog id="dialogAuditItem">
+      <ClientEvent name="onReady">self._$doShow = self.doShow;&#xD;
+self.doShow = function(o)&#xD;
+{  &#xD;
+	if(o.caption){&#xD;
+        self.set(&quot;width&quot;,o.caption);&#xD;
+    }&#xD;
+	if(o.width){&#xD;
+		self.set(&quot;width&quot;,o.width);&#xD;
+	}&#xD;
+	if(o.height){&#xD;
+		self.set(&quot;height&quot;,o.height);&#xD;
+	} &#xD;
+	 &#xD;
+	if(o.auditEntity){		&#xD;
+	   view.id(&quot;formItem&quot;).set(&quot;entity&quot;, o.auditEntity );	 &#xD;
+	}&#xD;
+    &#xD;
+	this._$doShow(o);	&#xD;
+};</ClientEvent>
+      <Property name="height">480</Property>
+      <Property name="width">650</Property>
+      <Property name="caption">审计详情</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var dialog = this.id(&quot;dialogAuditItem&quot;);&#xD;
+dialog.hide();</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="icon"> url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formItem">
+          <Property name="width">100%</Property>
+          <Property name="height">100%</Property>
+          <Property name="dataType">Map</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="cols">*,*,*</Property>
+          <AutoFormElement>
+            <Property name="name">operateType</Property>
+            <Property name="property">operateType</Property>
+            <Property name="label">操作类型</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">operateTime</Property>
+            <Property name="property">operateTime</Property>
+            <Property name="label">操作时间</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">operator</Property>
+            <Property name="property">operator</Property>
+            <Property name="label">操作员</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:3">
+            <Property name="name">orginentity</Property>
+            <Property name="property">orginentity</Property>
+            <Property name="label">原值</Property>
+            <Property name="editorType">TextArea</Property>
+            <Property name="height">150</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:3">
+            <Property name="name">entity</Property>
+            <Property name="property">entity</Property>
+            <Property name="label">操作后值</Property>
+            <Property name="editorType">TextArea</Property>
+            <Property name="height">150</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:3">
+            <Property name="name">entityChanges</Property>
+            <Property name="property">entityChanges</Property>
+            <Property name="label">变化内容</Property>
+            <Property name="editorType">TextArea</Property>
+            <Property name="height">100</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

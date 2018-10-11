@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+  <table-filter match-catalog="lsims" match-name="sm_component"/>
+  <table-filter match-catalog="lsims" match-name="sm_url"/>
+  <table-filter match-catalog="lsims" match-name="sm_system"/>
+  <table-filter match-catalog="lsims" match-name="sm_role"/>
+</hibernate-reverse-engineering>

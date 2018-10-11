@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>wait loading</title>
+    <base th:href="@{/}" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link href="../../static/css/main.css" th:href="@{/css/amazeui.min.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="web/css/public.css" th:href="@{/css/public.css}">
+    <link rel="stylesheet" href="web/css/body.css" th:href="@{/css/body.css}">
+</head>
+<body class="bg-white">
+<div class="wl-404" align="center">
+    <img th:src="@{/images/pageloading.gif}" width="300"> 
+    <p class="am-text-lg">请稍等片刻再刷新页面，或者直接联系我们：400-0731-500</p> 
+</div>
+
+<form id="autoForm" action="" method="get"></form>
+
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script th:src="@{/js/jquery.min.js}"></script>
+<!--<![endif]-->
+
+<!--[if lte IE 8 ]>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script th:src="@{/js/amazeui.ie8polyfill.min.js}"></script>
+<![endif]-->
+<script th:src="@{/js/amazeui.min.js}"></script>  
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+
+   var target=  /*[[${param.targetUrl}]]*/;  
+   target=decodeURIComponent(target); 
+    window.onload = function (){
+        $(".wl-404").css('height',$(document).height());
+        $(".am-text-lg").hide(); 
+        if(target!=""){ 
+        	 setTimeout('toTarget()',320); 
+        }else{
+        	$(".am-text-lg").show();
+        	$(".am-text-lg").html('羔羊迷失在云深不知处，请直接联系我们：400-0731-500');
+        } 
+    } 
+    function toTarget( ){ 
+    	if(!(target.indexOf("?")<0)){   //url中包含?
+    		//解析url
+            var targetInfos=target.split("?");
+            target=targetInfos[0];
+            if(targetInfos[1]!=null &&targetInfos[1]!=""){
+            	var paramsInfo=targetInfos[1].split("&");
+            	for(var i=0;i<paramsInfo.length;i++){
+            		if(paramsInfo[i]!=null && paramsInfo[i]!="" && paramsInfo[i].indexOf("=")>-1){
+            			var keyValue=paramsInfo[i].split("=");
+            			createDomInput(keyValue[0],keyValue[1]);
+            		}
+            	}
+            	
+            }
+            
+    	} 
+    	$("#autoForm").attr("action",target);
+     	$("#autoForm").submit();
+    }
+    
+    function createDomInput(name, value){ 
+        var tempInput = document.createElement("input");
+        tempInput.type = "hidden";
+        tempInput.name = name;
+        tempInput.value = value;
+        document.getElementById("autoForm").appendChild(tempInput);
+    }
+     /*]]>*/
+</script>
+</body>
+</html>

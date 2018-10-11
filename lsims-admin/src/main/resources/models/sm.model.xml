@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="smPosition">
+    <Property name="creationType">com.lanshan.web.admin.model.SmPosition</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="desc">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="code">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="lastUpdatePerson">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="lastUpdateTime">
+      <Property name="dataType">Date</Property>
+    </PropertyDef>
+    <PropertyDef name="systemId">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="createDate">
+      <Property name="dataType">Date</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="smDeptAutRange">
+    <Property name="creationType">com.lanshan.web.admin.model.SmDeptAutRange</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="deptId">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="rangeDeptId">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="kind">
+      <Property name="dataType">Character</Property>
+      <Property name="label">权限类型</Property>
+      <Property name="mapping">
+        <Property name="mapValues">${CommonUtils.getDicResult(&quot;ORG_AUTO_RANGE_KIND&quot;)}</Property>
+        <Property name="keyProperty">name</Property>
+        <Property name="valueProperty">desc</Property>
+      </Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="lastUpdatePerson">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="lastUpdateTime">
+      <Property name="dataType">Date</Property>
+    </PropertyDef>
+    <PropertyDef name="createDate">
+      <Property name="dataType">Date</Property>
+    </PropertyDef>
+    <PropertyDef name="authRangeName">
+      <Property></Property>
+      <Property name="label">权限包含机构</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="smDept">
+    <Property name="creationType">com.lanshan.web.admin.model.SmDept</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="createTime">
+      <Property name="dataType">Date</Property>
+    </PropertyDef>
+    <PropertyDef name="desc">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property></Property>
+      <Property name="label">名称</Property>
+    </PropertyDef>
+    <PropertyDef name="parentId">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="systemId">
+      <Property></Property>
+      <Property name="label">分布式系统中标识</Property>
+    </PropertyDef>
+    <PropertyDef name="enabled">
+      <Property></Property>
+      <Property name="label">0:否 1：是</Property>
+    </PropertyDef>
+    <PropertyDef name="provinceId">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="cityId">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="areaId">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="address">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="lastUpdatePerson">
+      <Property></Property>
+    </PropertyDef>
+    <PropertyDef name="lastUpdateTime">
+      <Property name="dataType">Date</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="smRole">
+    <Property name="creationType">com.lanshan.web.admin.model.SmRole</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="desc">
+      <Property/>
+    </PropertyDef>
+    <PropertyDef name="enabled">
+      <Property/>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property/>
+    </PropertyDef>
+    <PropertyDef name="systemId">
+      <Property/>
+      <Property name="label">分布式系统中标识</Property>
+    </PropertyDef>
+    <PropertyDef name="createDate">
+      <Property name="dataType">Date</Property>
+    </PropertyDef>
+  </DataType>
+</Model>

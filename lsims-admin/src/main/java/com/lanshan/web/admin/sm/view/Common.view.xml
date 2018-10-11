@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtDept">
+      <Property name="creationType">com.lanshan.web.admin.model.SmDept</Property>
+      <PropertyDef name="id"/>
+      <PropertyDef name="createTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="label">机构名称</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="label">上级机构ID</Property>
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="parentName">
+        <Property name="label">上级机构</Property>
+      </PropertyDef>
+      <PropertyDef name="systemId">
+        <Property name="label">系统标识</Property>
+        <Property name="mapping">
+          <Property name="mapValues">${CommonUtils.querySystemListAll()}</Property>
+          <Property name="keyProperty">systemId</Property>
+          <Property name="valueProperty">desc</Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="enabled">
+        <Property name="label">是否禁用</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">否</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">是</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="provinceId">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">所属省份</Property>
+      </PropertyDef>
+      <PropertyDef name="cityId">
+        <Property name="label">所属市</Property>
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="areaId">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">所属区</Property>
+      </PropertyDef>
+      <PropertyDef name="areaName">
+        <Property name="label">所属区域</Property>
+      </PropertyDef>
+      <PropertyDef name="address">
+        <Property name="label">地址</Property>
+      </PropertyDef>
+      <PropertyDef name="lastUpdatePerson">
+        <Property name="label">最后修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastUpdateTime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">最后修改时间</Property>
+      </PropertyDef>
+      <Reference name="children">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">smDeptCotroller#queryDeptChildren</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <Dialog id="dialogRegion">
+      <ClientEvent name="onReady">self.setBack = function(o){&#xD;
+    if( o ){&#xD;
+        var cb = this.$$callback;&#xD;
+        if(cb){&#xD;
+            cb(o);  &#xD;
+        }&#xD;
+    }&#xD;
+}&#xD;
+self._$doShow = self.doShow;&#xD;
+self.doShow = function(p)&#xD;
+{&#xD;
+	if(!p.oParam)&#xD;
+	   p.oParam = p;&#xD;
+	this._$oParam = p.oParam;&#xD;
+	var o = this._$oParam;&#xD;
+	if(o.caption){&#xD;
+        self.set(&quot;caption&quot;,o.caption);&#xD;
+    }&#xD;
+	if(o.width){&#xD;
+		self.set(&quot;width&quot;,o.width);&#xD;
+	}&#xD;
+	if(o.height){&#xD;
+		self.set(&quot;height&quot;,o.height);&#xD;
+	}&#xD;
+	&#xD;
+	var iframe = self.get(&quot;children&quot;)[0];&#xD;
+    iframe.set(&quot;path&quot;,&quot;com.lanshan.web.admin.sm.view.RegionTree.d&quot;);&#xD;
+    &#xD;
+	this.$$callback = o[&quot;onSelect&quot;];&#xD;
+	this._$doShow(p);	&#xD;
+};&#xD;
+</ClientEvent>
+      <Property name="caption">区域选择</Property>
+      <Property name="height">450</Property>
+      <Property name="width">300</Property>
+      <Property name="showCaptionBar">true</Property>
+      <Buttons>
+        <Button id="buttonRegionOk">
+          <ClientEvent name="onClick">var dialog=this.id(&quot;dialogRegion&quot;);&#xD;
+var iframe = dialog.get(&quot;children&quot;)[0];&#xD;
+var datas = iframe.get(&quot;iFrameWindow&quot;).recordSelectd(); &#xD;
+if(!datas){&#xD;
+    dorado.MessageBox.alert(&quot;请选择机构！&quot;);&#xD;
+}else{&#xD;
+    dialog.setBack(datas);&#xD;
+    dialog.hide();&#xD;
+}</ClientEvent>
+          <Property name="caption">确认</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="buttonRegionClose">
+          <ClientEvent name="onClick">var dialog = self.get(&quot;view&quot;).id(&quot;dialogRegion&quot;);&#xD;
+dialog.hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <IFrame id="regionIframe"/>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogTableSelectDept">
+      <ClientEvent name="onReady">self.setBack = function(o){&#xD;
+	if( o ){&#xD;
+		var cb = this.$$callback;&#xD;
+        if(cb){&#xD;
+			cb(o);  &#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+self._$doShow = self.doShow;&#xD;
+self.doShow = function(p)&#xD;
+{&#xD;
+	if(!p.oParam)&#xD;
+	   p.oParam = p;&#xD;
+	this._$oParam = p.oParam;&#xD;
+	var o = this._$oParam;&#xD;
+	if(o.caption){&#xD;
+        self.set(&quot;width&quot;,o.caption);&#xD;
+    }&#xD;
+	if(o.width){&#xD;
+		self.set(&quot;width&quot;,o.width);&#xD;
+	}&#xD;
+	if(o.height){&#xD;
+		self.set(&quot;height&quot;,o.height);&#xD;
+	}&#xD;
+	var mode = o[&quot;mode&quot;];&#xD;
+	mode = mode ? mode : &quot;S&quot;;&#xD;
+    if(mode=='S'){&#xD;
+		view.id(&quot;dataGridSelectDept&quot;).set(&quot;selectionMode&quot;,'singleRow');&#xD;
+	}else{&#xD;
+		view.id(&quot;dataGridSelectDept&quot;).set(&quot;selectionMode&quot;,'multiRows');		&#xD;
+	}&#xD;
+	var orgkind = o.orgkind;&#xD;
+	&#xD;
+	&#xD;
+	var dataset =  view.id(&quot;dataSetSelectDept&quot;);&#xD;
+	if(o.appParam){		&#xD;
+		dataset.set(&quot;parameter&quot;,o.appParam);&#xD;
+	}&#xD;
+    dataset.flushAsync();&#xD;
+	this.$$callback = o[&quot;onSelect&quot;];&#xD;
+	this._$doShow(p);	&#xD;
+};&#xD;
+&#xD;
+</ClientEvent>
+      <Property name="center">true</Property>
+      <Property name="height">400</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">600</Property>
+      <Property name="caption">机构选择</Property>
+      <Buttons>
+        <Button id="btnSelDeptOk">
+          <ClientEvent name="onClick">var dialog=this.id(&quot;dialogTableSelectDept&quot;);&#xD;
+var dataTable = this.id(&quot;dataGridSelectDept&quot;);&#xD;
+var datas = dataTable.get(&quot;selection&quot;);	&#xD;
+ &#xD;
+if(!datas){&#xD;
+	dorado.MessageBox.alert(&quot;请选择机构！&quot;);&#xD;
+}else{&#xD;
+	dialog.setBack(datas);&#xD;
+	dialog.hide();&#xD;
+}</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="buttonDeptClose">
+          <ClientEvent name="onClick">var dialog = this.id(&quot;dialogTableSelectDept&quot;);&#xD;
+dialog.hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataSet id="dataSetSelectDept">
+          <Property name="dataType">[smDept]</Property>
+          <Property name="dataProvider">smDeptCotroller#queryResult</Property>
+          <Property name="pageSize">15</Property>
+          <Property name="loadMode">manual</Property>
+        </DataSet>
+        <DataPilot>
+          <Property name="dataSet">dataSetSelectDept</Property>
+        </DataPilot>
+        <DataGrid id="dataGridSelectDept">
+          <ClientEvent name="onDataRowDoubleClick">/*&#xD;
+var entity=this.id(&quot;dataSetSelectDept&quot;).getData(&quot;#&quot;); //取得原始数据列表&#xD;
+var selectedItems=this.id(&quot;dataGridSelectDept&quot;).get(&quot;selection&quot;); //定义一个数组&#xD;
+if(this.id(&quot;dataGridSelectDept&quot;).get(&quot;selectionMode&quot;)==&quot;singleRow&quot;){&#xD;
+	if(!selectedItems)&#xD;
+	  selectedItems = entity;&#xD;
+    else&#xD;
+      selectedItems = null;&#xD;
+}else{&#xD;
+	var find = false;&#xD;
+	selectedItems.each(function(item){&#xD;
+		if(item.get(&quot;id&quot;)==entity.get(&quot;id&quot;))&#xD;
+		   find=true;&#xD;
+	});&#xD;
+	if(!find)&#xD;
+	  selectedItems.push(entity);&#xD;
+	else&#xD;
+	  selectedItems.remove(entity);&#xD;
+}&#xD;
+this.id(&quot;dataGridSelectDept&quot;).set(&quot;selection&quot;,selectedItems);&#xD;
+*/&#xD;
+</ClientEvent>
+          <Property name="dataSet">dataSetSelectDept</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="selectionMode">multiRows</Property>
+          <Property name="showFilterBar">true</Property>
+          <Property name="filterMode">serverSide</Property>
+          <RowSelectorColumn id="rowSelectorColumn"/>
+          <DataColumn>
+            <ClientEvent name="onRenderCell">var entitylist = arg.data.get(&quot;parents&quot;);&#xD;
+var name = [];&#xD;
+if (entitylist) {&#xD;
+	entitylist.each(function(item){&#xD;
+		name.push(item.get(&quot;name&quot;));&#xD;
+	});&#xD;
+}&#xD;
+var fullName= name.join(&quot; -> &quot;); &#xD;
+arg.dom.innerHTML =fullName;&#xD;
+</ClientEvent>
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Property name="caption">名称</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+    </Dialog>
+    <Dialog id="dialogDeptTree">
+      <ClientEvent name="onReady">self.setBack = function(o){&#xD;
+	if( o ){&#xD;
+		var cb = this.$$callback;&#xD;
+        if(cb){&#xD;
+			cb(o);  &#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+self._$doShow = self.doShow;&#xD;
+self.doShow = function(p)&#xD;
+{&#xD;
+	if(!p.oParam)&#xD;
+	   p.oParam = p;&#xD;
+	this._$oParam = p.oParam;&#xD;
+	var o = this._$oParam;&#xD;
+	if(o.caption){&#xD;
+        self.set(&quot;caption&quot;,o.caption);&#xD;
+    }&#xD;
+	if(o.width){&#xD;
+		self.set(&quot;width&quot;,o.width);&#xD;
+	}&#xD;
+	if(o.height){&#xD;
+		self.set(&quot;height&quot;,o.height);&#xD;
+	}  &#xD;
+	&#xD;
+	var para = view.id(&quot;dsDept&quot;).get(&quot;dataType&quot;).get(&quot;propertyDefs&quot;).get(&quot;children&quot;).get(&quot;parameter&quot;);&#xD;
+    if(!para) {&#xD;
+	   para = {};&#xD;
+    }&#xD;
+    para.orgkinds = &quot;00;01&quot;;&#xD;
+    para.parentId = &quot;$${this.id}&quot;;&#xD;
+    view.id(&quot;dsDept&quot;).get(&quot;dataType&quot;).get(&quot;propertyDefs&quot;).get(&quot;children&quot;).set(&quot;parameter&quot;,para); &#xD;
+    view.id('dataTreeGridDept').clearNodes();	&#xD;
+    view.id(&quot;dsDept&quot;).flushAsync();&#xD;
+  &#xD;
+	this.$$callback = o[&quot;onSelect&quot;];&#xD;
+	this._$doShow(p);	&#xD;
+};&#xD;
+&#xD;
+</ClientEvent>
+      <Property name="width">400</Property>
+      <Property name="height">600</Property>
+      <Buttons>
+        <Button id="btnDeptConfirm">
+          <ClientEvent name="onClick">var dialog=this.id(&quot;dialogDeptTree&quot;);&#xD;
+var dataTable = this.id(&quot;dataTreeGridDept&quot;);&#xD;
+var datas = dataTable.get(&quot;currentEntity&quot;); &#xD;
+ &#xD;
+if(!datas){&#xD;
+	dorado.MessageBox.alert(&quot;请选择机构！&quot;);&#xD;
+}else{&#xD;
+	dialog.setBack(datas);&#xD;
+	dialog.hide();&#xD;
+}</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnDeptClose">
+          <ClientEvent name="onClick">var dialog = this.id(&quot;dialogDeptTree&quot;);&#xD;
+dialog.hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataSet id="dsDept">
+          <Property name="dataType">[dtDept]</Property>
+          <Property name="dataProvider">Sm.DeptAction#loadQueryResult</Property>
+          <Property name="loadMode">manual</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="parameter">
+            <Entity>
+              <Property name="parentIsNull">true</Property>
+            </Entity>
+          </Property>
+        </DataSet>
+        <DataTreeGrid id="dataTreeGridDept">
+          <Property name="dataSet">dsDept</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="treeColumn">name</Property>
+          <Property name="stretchColumnsMode">allColumns</Property>
+          <Property name="draggable">false</Property>
+          <Property name="droppable">false</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">children</Property>
+              <Property name="recursive">true</Property>
+              <Property name="labelProperty">name</Property>
+              <Property name="expandLevel">1</Property>
+            </BindingConfig>
+          </BindingConfigs>
+          <Columns>
+            <DataColumn>
+              <Property name="property">name</Property>
+              <Property name="caption">机构名称</Property>
+              <Property name="width">30%</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="caption">机构类型</Property>
+              <Property name="property">orgkind</Property>
+              <Property name="width">8%</Property>
+            </DataColumn>
+            <DataColumn>
+              <Property name="property">enabled</Property>
+              <Property name="width">5%</Property>
+              <Property name="caption">是否可用</Property>
+              <Property name="name">enabled</Property>
+            </DataColumn>
+            <DataColumn id="id">
+              <Property name="property">id</Property>
+              <Property name="visible">false</Property>
+            </DataColumn>
+          </Columns>
+        </DataTreeGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialogBaiduMap">
+      <ClientEvent name="onReady">self.setBack = function(){&#xD;
+	if(!window.lngLatAddress.lng||window.lngLatAddress.lng==null){&#xD;
+		dorado.MessageBox.alert(&quot;请选择一个地点后再确认&quot;);&#xD;
+		return;&#xD;
+    }&#xD;
+		&#xD;
+    var cb = this.$$callback;&#xD;
+    if(cb){ &#xD;
+        cb(window.lngLatAddress);  &#xD;
+    }&#xD;
+}&#xD;
+self._$doShow = self.doShow;&#xD;
+self.doShow = function(p)&#xD;
+{&#xD;
+	if(!p.oParam)&#xD;
+	   p.oParam = p;&#xD;
+	this._$oParam = p.oParam;&#xD;
+	var o = this._$oParam;&#xD;
+	if(o.caption){&#xD;
+        self.set(&quot;caption&quot;,o.caption);&#xD;
+    }&#xD;
+	if(o.width){&#xD;
+		self.set(&quot;width&quot;,o.width);&#xD;
+	}&#xD;
+	if(o.height){&#xD;
+		self.set(&quot;height&quot;,o.height);&#xD;
+	}&#xD;
+	&#xD;
+	if(!o.cityName){&#xD;
+		window.baiduCityName=&quot;长沙市&quot;;&#xD;
+	}else{&#xD;
+		window.baiduCityName=o.cityName;&#xD;
+	} &#xD;
+	&#xD;
+	if(o.curPosition){&#xD;
+		window.curPosition=o.curPosition;&#xD;
+	} &#xD;
+	var bdJsp='web/map/baiduMap.jsp?type=false&amp;'+Math.random();&#xD;
+	view.id(&quot;baiduMapIframe&quot;).set(&quot;path&quot;,bdJsp);&#xD;
+	&#xD;
+	this.$$callback = o[&quot;onSelect&quot;];&#xD;
+	this._$doShow(p);	&#xD;
+};&#xD;
+&#xD;
+window.baiduCityName;   //百度地图自动定位到的城市&#xD;
+window.curPosition=&quot;&quot;;      //当前地址&#xD;
+window.lngLatAddress={};    //保存选择的坐标值 和详细地址&#xD;
+window.setCoOrdinates=function(lng,lat){&#xD;
+	lngLatAddress.lng=lng;&#xD;
+	lngLatAddress.lat=lat;&#xD;
+}&#xD;
+&#xD;
+window.setMapPosition=function(address){&#xD;
+	lngLatAddress.address=address;&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+      <Property name="width">900</Property>
+      <Property name="height">700</Property>
+      <Property name="center">true</Property>
+      <Property name="showCaptionBar">true</Property>
+      <Property name="caption">坐标拾取</Property>
+      <Buttons>
+        <Button id="buttonBdMapOk">
+          <ClientEvent name="onClick">var dialog=this.id(&quot;dialogBaiduMap&quot;);&#xD;
+dialog.setBack();&#xD;
+dialog.hide();</ClientEvent>
+          <Property name="caption">确认</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="buttonBdMapClose">
+          <ClientEvent name="onClick">var dialog = self.get(&quot;view&quot;).id(&quot;dialogBaiduMap&quot;);&#xD;
+window.lngLatAddress.lng=null;&#xD;
+window.lngLatAddress.lat=null;&#xD;
+dialog.hide();&#xD;
+</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <IFrame id="baiduMapIframe"/>
+      </Children>
+    </Dialog>
+    <Dialog id="dialogFileUpload">
+      <ClientEvent name="onHide">//view.id(&quot;datasetQueryResult&quot;).getData().cancel();</ClientEvent>
+      <ClientEvent name="onReady">self.showFile = function(){ &#xD;
+	var b = view.id(&quot;fileAddsButton&quot;);&#xD;
+		if (document.createEvent) {&#xD;
+			var e = document.createEvent('Event');&#xD;
+			e.initEvent(&quot;click&quot;, true, true);&#xD;
+			b.getDom().dispatchEvent(e);&#xD;
+		}&#xD;
+		else {&#xD;
+			try {&#xD;
+				if (!$('.plupload.flash').length) {&#xD;
+					b.getDom().click();&#xD;
+				}&#xD;
+			} &#xD;
+			catch (e) {&#xD;
+			&#xD;
+			}&#xD;
+		}&#xD;
+};&#xD;
+&#xD;
+self.setBack = function(o){&#xD;
+	if( o ){&#xD;
+		var cb = this.$$callback;&#xD;
+        if(cb){&#xD;
+			cb(o);  &#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+&#xD;
+self._$doShow = self.doShow;&#xD;
+self.doShow = function(p) {&#xD;
+	var fileUploadAction = view.id(&quot;fileUploadAction&quot;);&#xD;
+	var upParams={};&#xD;
+	upParams.remotePath=p.remotePath;&#xD;
+	upParams.remoteBucket=p.remoteBucket;&#xD;
+	if(p.rename!=null){&#xD;
+		 upParams.rename=p.rename;&#xD;
+	}  &#xD;
+	fileUploadAction.set(&quot;parameter&quot;,upParams);&#xD;
+	this.$$callback=p[&quot;onSuccess&quot;];&#xD;
+	&#xD;
+	if(p[&quot;orginImage&quot;]&amp;&amp; p[&quot;orginImage&quot;]!=&quot;&quot;){&#xD;
+		$(&quot;#img&quot;).attr(&quot;src&quot;,p[&quot;orginImage&quot;])&#xD;
+	}else{&#xD;
+		$(&quot;#img&quot;).attr(&quot;src&quot;,&quot;&quot;);&#xD;
+	}&#xD;
+	&#xD;
+	this._$doShow(p);	&#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="width">550</Property>
+      <Property name="height">400</Property>
+      <Property name="caption">上传图片</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick"> &#xD;
+var o =$(&quot;#img&quot;).attr(&quot;src&quot;);&#xD;
+if( o == null || o == &quot;&quot; ){&#xD;
+	dorado.MessageBox.alert(&quot;请上传图片信息&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+dorado.MessageBox.confirm(&quot;您确定保存吗？&quot;,function(){&#xD;
+	view.id(&quot;dialogFileUpload&quot;).setBack(o);&#xD;
+	view.id(&quot;dialogFileUpload&quot;).hide(); &#xD;
+});</ClientEvent>
+          <Property name="caption">保存</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dialogFileUpload&quot;).hide();</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+        <Button id="fileAddsButton">
+          <ClientEvent name="onRefreshDom">var view = this; &#xD;
+setTimeout(function(){ &#xD;
+	arg.dom.style.position = &quot;absolute&quot;; &#xD;
+},1);</ClientEvent>
+          <Property name="caption">上传图片</Property>
+          <Property name="width">0</Property>
+          <Property name="action">fileUploadAction</Property>
+          <Property name="style">
+            <Property name="visibility">hidden</Property>
+            <Property name="display">none</Property>
+          </Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="editAutoForm">
+          <Property name="cols">*</Property>
+          <Property name="labelWidth">100</Property>
+          <HtmlContainer id="imagePreview">
+            <Property name="content">&lt;img src=&quot;&quot; id=&quot;img&quot; width=&quot;500&quot; height=&quot;230&quot;/></Property>
+            <Property name="hideMode">display</Property>
+          </HtmlContainer>
+          <Button id="btnUploadImg">
+            <ClientEvent name="onClick">view.id(&quot;dialogFileUpload&quot;).showFile();&#xD;
+</ClientEvent>
+            <Property name="caption">上传图片</Property>
+            <Property name="width">500</Property>
+          </Button>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

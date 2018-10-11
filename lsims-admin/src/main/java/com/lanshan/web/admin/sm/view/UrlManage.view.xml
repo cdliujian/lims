@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="urlDataType">
+      <Property name="creationType">com.lanshan.web.admin.model.SmUrl</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property></Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="icon">
+        <Property></Property>
+        <Property name="label">图标</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property></Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="order">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">排序</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="systemId">
+        <Property></Property>
+        <Property name="label">系统标识</Property>
+      </PropertyDef>
+      <PropertyDef name="url">
+        <Property></Property>
+        <Property name="label">地址</Property>
+      </PropertyDef>
+      <PropertyDef name="code">
+        <Property></Property>
+        <Property name="label">编码</Property>
+      </PropertyDef>
+      <PropertyDef name="createDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <Reference name="components">
+        <Property name="dataProvider">smComponentCotroller#loadQueryResult</Property>
+        <Property name="dataType">[smComponent]</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="urlId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+      <Reference name="children">
+        <Property name="dataProvider">smUrlController#loadQueryResult</Property>
+        <Property name="dataType">[urlDataType]</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="parentId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+    </DataType>
+    <DataType name="smComponent">
+      <Property name="creationType">com.lanshan.web.admin.model.SmComponent</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="componentId">
+        <Property></Property>
+        <Property name="label">资源标识</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property></Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="urlId">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">菜单id</Property>
+      </PropertyDef>
+      <PropertyDef name="createDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="lastUpdatePerson">
+        <Property></Property>
+        <Property name="label">最近修改人</Property>
+      </PropertyDef>
+      <PropertyDef name="lastUpdateTime">
+        <Property name="dataType">Date</Property>
+        <Property name="label">最近修改时间</Property>
+      </PropertyDef>
+      <PropertyDef name="systemId">
+        <Property></Property>
+        <Property name="label">系统标识</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">self.showAuitLog=function(){  &#xD;
+	 var tree=view.id(&quot;dataTreeUrl&quot;);&#xD;
+     var currentNode=tree.get(&quot;currentNode&quot;);&#xD;
+     var currentEntity=currentNode.get(&quot;data&quot;); &#xD;
+	 if(currentEntity){&#xD;
+	 	 var auditId=currentEntity.get(&quot;id&quot;); &#xD;
+         var ap={};&#xD;
+         ap.auditEntity=currentEntity;&#xD;
+         ap.auditId=auditId;&#xD;
+         var p={};&#xD;
+         p.appParam=ap; &#xD;
+         view.id(&quot;dialogAudit&quot;).show(p); &#xD;
+	 } &#xD;
+}&#xD;
+&#xD;
+self.showAuitCompLog=function(){&#xD;
+	var resources=view.id(&quot;dataGridResource&quot;); &#xD;
+	var entity=resources.get(&quot;currentEntity&quot;); &#xD;
+	if(entity){ &#xD;
+         var ap={};&#xD;
+         ap.auditEntity=entity;&#xD;
+         ap.auditId=entity.get(&quot;id&quot;);&#xD;
+         var p={};&#xD;
+         p.appParam=ap; &#xD;
+         view.id(&quot;dialogAudit&quot;).show(p); &#xD;
+	}&#xD;
+}&#xD;
+</ClientEvent>
+    <DataSet id="dataSetUrl">
+      <Property name="dataType">[urlDataType]</Property>
+      <Property name="dataProvider">smUrlController#loadQueryResult</Property>
+      <Property name="parameter">
+        <Entity>
+          <Property name="parentIsNull">1</Property>
+        </Entity>
+      </Property>
+    </DataSet>
+    <DataSet id="dataSetUrlEdit">
+      <ClientEvent name="onLoadData">var dataSetUrlEdit = view.id(&quot;dataSetUrlEdit&quot;);&#xD;
+dataSetUrlEdit.clear();&#xD;
+var currentRecord = view.id(&quot;dataSetUrl&quot;).getData(&quot;#&quot;);&#xD;
+dataSetUrlEdit.insert(currentRecord);&#xD;
+</ClientEvent>
+      <Property name="dataType">[urlDataType]</Property>
+      <Property name="parameter"></Property>
+    </DataSet>
+    <DataTree id="dataTreeUrl" layoutConstraint="left">
+      <ClientEvent name="onContextMenu">view.id(&quot;menuOperate&quot;).show({&#xD;
+	position: {&#xD;
+		left: arg.event.pageX,&#xD;
+		top: arg.event.pageY&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
+      <ClientEvent name="onClick">/*&#xD;
+var currentRecord = self.get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
+&#xD;
+&#xD;
+var dataSetUrlEdit = view.id(&quot;dataSetUrlEdit&quot;);&#xD;
+dataSetUrlEdit.clear();&#xD;
+dataSetUrlEdit.insert(currentRecord);&#xD;
+*/</ClientEvent>
+      <Property name="dataSet">dataSetUrl</Property>
+      <Property name="width">260</Property>
+      <Property name="currentNodeDataPath">currentUrl</Property>
+      <Property name="draggable">false</Property>
+      <Property name="dragTags">url</Property>
+      <Property name="droppable">true</Property>
+      <Property name="droppableTags">url</Property>
+      <Property name="dropMode">onOrInsertItems</Property>
+      <BindingConfigs>
+        <BindingConfig>
+          <Property name="childrenProperty">children</Property>
+          <Property name="iconProperty">icon</Property>
+          <Property name="tipProperty">desc</Property>
+          <Property name="labelProperty">name</Property>
+          <Property name="expandLevel">0</Property>
+          <Property name="recursive">true</Property>
+          <Property name="name">name</Property>
+        </BindingConfig>
+      </BindingConfigs>
+    </DataTree>
+    <GroupBox>
+      <Property name="caption">菜单定义</Property>
+      <Buttons/>
+      <Children>
+        <ToolBar>
+          <Button>
+            <ClientEvent name="onClick">var dataSetUrl = view.id(&quot;dataSetUrl&quot;);&#xD;
+view.id(&quot;updateActionUrlEdit&quot;).execute(function(){&#xD;
+	dataSetUrl.flushAsync();&#xD;
+})&#xD;
+</ClientEvent>
+            <Property name="caption">保存</Property>
+            <Property name="icon"> url(>skin>common/icons.gif) -140px -20px</Property>
+          </Button>
+        </ToolBar>
+        <AutoForm id="autoForm_1" layoutConstraint="center">
+          <Property name="dataSet">dataSetUrl</Property>
+          <Property name="cols">*,*</Property>
+          <Property name="dataPath">!currentUrl</Property>
+          <AutoFormElement>
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">code</Property>
+            <Property name="property">code</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">url</Property>
+            <Property name="property">url</Property>
+            <Property name="editable">true</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">icon</Property>
+            <Property name="property">icon</Property>
+            <Property name="trigger">triggerSelectionIcon</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">order</Property>
+            <Property name="property">order</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">desc</Property>
+            <Property name="property">desc</Property>
+            <Property name="editorType">TextArea</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+    </GroupBox>
+    <GroupBox>
+      <Property name="caption">按钮资源</Property>
+      <Buttons/>
+      <Children>
+        <ToolBar>
+          <Button>
+            <ClientEvent name="onClick">var urlEntity = view.get(&quot;#dataTreeUrl.currentEntity&quot;);&#xD;
+var resEntitys = view.get(&quot;#dataTreeUrl.currentEntity.components&quot;);&#xD;
+if(!resEntitys) resEntitys = {};&#xD;
+resEntitys.insert({},&quot;begin&quot;);</ClientEvent>
+            <Property name="caption">新增</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+          </Button>
+          <Button>
+            <ClientEvent name="onClick">var resEntitys = view.get(&quot;#dataTreeUrl.currentEntity.components&quot;);&#xD;
+&#xD;
+var record = view.id(&quot;dataGridResource&quot;).get(&quot;currentEntity&quot;);&#xD;
+if(!record){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中要删除的资源!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var id  = record.get(&quot;id&quot;);&#xD;
+if(!id){&#xD;
+	resEntitys.remove(record);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+&#xD;
+var ajaxActionDelComponent = view.id(&quot;ajaxActionDelComponent&quot;);&#xD;
+ajaxActionDelComponent.set(&quot;parameter&quot;,id).execute(function(){&#xD;
+	resEntitys.remove(record);&#xD;
+});&#xD;
+</ClientEvent>
+            <Property name="caption">删除</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+          </Button>
+        </ToolBar>
+        <DataGrid id="dataGridResource" layoutConstraint="center ">
+          <Property name="dataSet">dataSetUrl</Property>
+          <Property name="dataPath">!currentUrl.components</Property>
+          <Property name="stretchColumnsMode">allColumns</Property>
+          <DataColumn>
+            <Property name="property">componentId</Property>
+            <Property name="width">30%</Property>
+            <Property name="name">componentId</Property>
+          </DataColumn>
+          <DataColumn name="desc">
+            <Property name="property">desc</Property>
+            <Property name="width">40%</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+    </GroupBox>
+    <Menu id="menuOperate">
+      <MenuItem>
+        <ClientEvent name="onClick">var dataSetUrlEdit = view.id(&quot;dataSetUrlEdit&quot;);&#xD;
+dataSetUrlEdit.clear();&#xD;
+var newentity = dataSetUrlEdit.insert({name:'新菜单',forNavigation:&quot;1&quot;});&#xD;
+view.id(&quot;dataSetUrl&quot;).insert(newentity);&#xD;
+&#xD;
+view.id(&quot;dataTreeUrl&quot;).set(&quot;currentEntity&quot;,newentity);&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="name">addRoot</Property>
+        <Property name="caption">添加根节点</Property>
+        <Property name="icon">url(skin>common/icons.gif) -280px -100px</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">var tree=view.id(&quot;dataTreeUrl&quot;);&#xD;
+var currentNode=tree.get(&quot;currentNode&quot;);&#xD;
+if(!currentNode){&#xD;
+	dorado.MessageBox.alert(&quot;请先选中一个父节点!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var currentEntity=currentNode.get(&quot;data&quot;);&#xD;
+var parentId = currentEntity.get(&quot;id&quot;);&#xD;
+if(!parentId){&#xD;
+	dorado.MessageBox.alert(&quot;增加下级菜单钱请先保存当前菜单!&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+var newEntity=currentEntity.get(&quot;children&quot;).insert({&#xD;
+	parentId:currentEntity.get(&quot;id&quot;),&#xD;
+	forNavigation:&quot;1&quot;,&#xD;
+	name:'新菜单'&#xD;
+});&#xD;
+&#xD;
+currentNode.expand();&#xD;
+tree.set(&quot;currentEntity&quot;,newEntity);&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+        <Property name="caption">添加子节点</Property>
+        <Property name="name">addSub</Property>
+        <Property name="icon">url(skin>common/icons.gif) -120px 0px</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">&#xD;
+var tree=view.id(&quot;dataTreeUrl&quot;);&#xD;
+var entity=tree.get(&quot;currentEntity&quot;);&#xD;
+if (entity) {&#xD;
+	view.id(&quot;ajaxActionDelUrl&quot;).set(&quot;parameter&quot;, entity.get(&quot;id&quot;)).execute(&#xD;
+	   function(){&#xD;
+	   	  entity.remove();&#xD;
+		  var firstNode=tree.get(&quot;firstNode&quot;);&#xD;
+		  if(firstNode){&#xD;
+			tree.set(&quot;currentNode&quot;,firstNode);&#xD;
+		  }&#xD;
+	   }&#xD;
+	);&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有节点可供删除！&quot;);&#xD;
+} &#xD;
+</ClientEvent>
+        <Property name="name">del</Property>
+        <Property name="caption">删除</Property>
+        <Property name="icon">url(skin>common/icons.gif) -140px 0px</Property>
+      </MenuItem>
+    </Menu>
+    <UpdateAction id="updateActionUrlEdit">
+      <ClientEvent name="beforeExecute">var dataSetUrlEdit = view.id(&quot;dataSetUrlEdit&quot;);&#xD;
+dataSetUrlEdit.clear();&#xD;
+&#xD;
+var tree=view.id(&quot;dataTreeUrl&quot;);&#xD;
+var currentNode=tree.get(&quot;currentNode&quot;);&#xD;
+var currentEntity=currentNode.get(&quot;data&quot;);&#xD;
+dataSetUrlEdit.insert(currentEntity);&#xD;
+</ClientEvent>
+      <Property name="dataResolver">smUrlController#save</Property>
+      <Property name="successMessage">保存成功</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetUrlEdit</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <AjaxAction id="ajaxActionDelUrl">
+      <Property name="confirmMessage">确定要删除此菜单信息吗？</Property>
+      <Property name="successMessage">删除成功</Property>
+      <Property name="service">smUrlController#delete</Property>
+    </AjaxAction>
+    <AjaxAction id="ajaxActionDelComponent">
+      <Property name="confirmMessage">确定要删除此资源信息吗？</Property>
+      <Property name="service">smComponentCotroller#delete</Property>
+      <Property name="successMessage">删除成功</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

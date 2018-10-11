@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Property name="metaData">
+    <Property name="securityTag"></Property>
+  </Property>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtQuery" parent="Bean">
+      <PropertyDef name="id">
+        <Property name="dataType">String</Property>
+        <Property name="label">编码</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">字典名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtEnumCategory" parent="dataType1">
+      <Reference name="enumses">
+        <Property name="dataType">[dtEnum]</Property>
+        <Property name="dataProvider">smEnumsCotroller#getEnumsByCategoryId</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dtEnum">
+      <Property name="creationType">com.lanshan.web.admin.model.SmEnums</Property>
+      <PropertyDef name="name">
+        <Property></Property>
+        <Property name="label">编码</Property>
+        <Validator name="validator1" type="length">
+          <Property name="maxLength">60</Property>
+          <Property name="minLength">1</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property></Property>
+        <Property name="label">名称</Property>
+        <Validator type="length">
+          <Property name="name">validator2</Property>
+          <Property name="maxLength">120</Property>
+          <Property name="minLength">1</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="memo">
+        <Property></Property>
+        <Property name="label">说明</Property>
+        <Validator type="length">
+          <Property name="name">validator3</Property>
+          <Property name="maxLength">120</Property>
+          <Property name="minLength">0</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="categoryId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="systemId">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dataType1" meta="child:dtEnumCategory">
+      <Property name="creationType">com.lanshan.web.admin.model.SmEnumCategorys</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property></Property>
+        <Property name="label">字典名称</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property></Property>
+        <Property name="label">描叙</Property>
+      </PropertyDef>
+      <PropertyDef name="systemId">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">self.query = function(){&#xD;
+    var entity = this.id(&quot;datasetQuery&quot;).getData(&quot;#&quot;);&#xD;
+    var datasetQueryResult = this.id(&quot;datasetQueryResult&quot;);&#xD;
+    datasetQueryResult.set(&quot;parameter&quot;,entity);&#xD;
+    datasetQueryResult.flushAsync();&#xD;
+};&#xD;
+self.query(); &#xD;
+&#xD;
+self.showUpdate = function()&#xD;
+{&#xD;
+	var dq = self.id(&quot;datasetQueryResult&quot;);&#xD;
+	var d = dq.getData(&quot;#&quot;);&#xD;
+	if (!d) {&#xD;
+		dorado.MessageBox.alert(&quot;没有记录被选中!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	var o = self.id(&quot;dialogEdit&quot;);&#xD;
+	&#xD;
+	o.show({&quot;oParam&quot;:{&quot;oType&quot;:3}});&#xD;
+};&#xD;
+&#xD;
+self.showAdd = function(){&#xD;
+	var o = self.id(&quot;dialogEdit&quot;);&#xD;
+	o.show({&#xD;
+		&quot;oParam&quot;: {&#xD;
+			&quot;oType&quot;: 2&#xD;
+		}&#xD;
+	});&#xD;
+};&#xD;
+self.del = function(){&#xD;
+	var dq = self.id(&quot;datasetQueryResult&quot;);&#xD;
+	var d = dq.getData(&quot;#&quot;);&#xD;
+&#xD;
+	if (!d) {&#xD;
+		dorado.MessageBox.alert(&quot;没有记录被选中!&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
+	&#xD;
+	var action = this.id(&quot;updateActionDel&quot;);&#xD;
+	action.execute(function(){&#xD;
+		d.remove();&#xD;
+	});&#xD;
+};&#xD;
+</ClientEvent>
+    <DataSet id="datasetQueryResult">
+      <Property name="dataProvider">smEnumCategorysCotroller#loadQueryResult</Property>
+      <Property name="dataType">[dtEnumCategory]</Property>
+      <Property name="loadMode">manual</Property>
+      <Property name="pageSize">15</Property>
+    </DataSet>
+    <DataSet id="datasetQuery">
+      <ClientEvent name="onReady">self.insert({}, &quot;begin&quot;);</ClientEvent>
+      <Property name="dataType">dtQuery</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="direction">left</Property>
+      <Property name="position">680</Property>
+      <MainControl>
+        <DataGrid>
+          <Property name="dataSet">datasetQueryResult</Property>
+          <Property name="dataPath">#.enumses</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="stretchColumnsMode">allColumns</Property>
+          <DataColumn name="name">
+            <Property name="property">name</Property>
+            <Property name="width">20%</Property>
+          </DataColumn>
+          <DataColumn name="desc">
+            <Property name="property">desc</Property>
+            <Property name="width">20%</Property>
+          </DataColumn>
+          <DataColumn name="memo">
+            <Property name="property">memo</Property>
+            <Property name="width">60%</Property>
+          </DataColumn>
+        </DataGrid>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <AutoForm id="formQuery">
+            <Property name="autoCreateElements">false</Property>
+            <Property name="cols">*,*</Property>
+            <Property name="dataSet">datasetQuery</Property>
+            <Property name="dataType">dtQuery</Property>
+            <Property name="labelAlign">right</Property>
+            <Property name="labelWidth">120</Property>
+            <AutoFormElement>
+              <Property name="name">name</Property>
+              <Property name="property">name</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">datasetQueryResult</Property>
+            </DataPilot>
+            <Separator/>
+            <ToolBarButton id="buttonQuery">
+              <ClientEvent name="onClick">this.query();</ClientEvent>
+              <Property name="caption">查询</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+            </ToolBarButton>
+            <Separator/>
+            <ToolBarButton id="buttonAdd">
+              <ClientEvent name="onClick">this.showAdd();</ClientEvent>
+              <Property name="caption">新增</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+            </ToolBarButton>
+            <ToolBarButton id="buttonEdit">
+              <ClientEvent name="onClick">this.showUpdate();&#xD;
+</ClientEvent>
+              <Property name="caption">修改</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
+            </ToolBarButton>
+            <ToolBarButton id="buttonDel">
+              <ClientEvent name="onClick">this.del();&#xD;
+</ClientEvent>
+              <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid id="dataTable">
+            <Property name="dataSet">datasetQueryResult</Property>
+            <Property name="readOnly">true</Property>
+            <Property name="autoCreateColumns">false</Property>
+            <DataColumn name="name">
+              <Property name="property">name</Property>
+            </DataColumn>
+            <DataColumn name="desc">
+              <Property name="property">desc</Property>
+            </DataColumn>
+          </DataGrid>
+          <Dialog id="dialogEdit">
+            <ClientEvent name="onReady">self._$doShow = self.doShow;&#xD;
+self.doShow = function(o)&#xD;
+{&#xD;
+	var oParam = o[&quot;oParam&quot;];&#xD;
+	this._$oParam = o[&quot;oParam&quot;];&#xD;
+	var oType = oParam[&quot;oType&quot;];&#xD;
+	if( 1 == oType )&#xD;
+	{&#xD;
+		this._showView(oParam);&#xD;
+	}&#xD;
+	else if( 2 == oType )&#xD;
+	{&#xD;
+		this._showAdd(oParam);&#xD;
+	}&#xD;
+	else if( 3 == oType )&#xD;
+	{&#xD;
+		this._showUpdate(oParam);&#xD;
+	}&#xD;
+	this._$doShow(o);	&#xD;
+};&#xD;
+&#xD;
+self._showAdd = function(o)&#xD;
+{&#xD;
+	self.set({&quot;caption&quot;:&quot;字典-新增&quot;});&#xD;
+    var view = this.get(&quot;view&quot;);&#xD;
+    //插入一行空记录&#xD;
+    var datasetQueryResult = view.id(&quot;datasetQueryResult&quot;);&#xD;
+    datasetQueryResult.set({&quot;readOnly&quot;:false});&#xD;
+    datasetQueryResult.insert({},&quot;begin&quot;);&#xD;
+    &#xD;
+    //设置确认按钮可见，因为在查看的时候会隐藏这个确定按钮&#xD;
+    var sb = view.id(&quot;buttonSave&quot;);&#xD;
+    sb.set({&quot;visible&quot;:true});&#xD;
+    &#xD;
+    //设置key这个输入框可操作，因为在修改和查看会修改这个输入框不可用&#xD;
+    view.id(&quot;name&quot;).set(&quot;readOnly&quot;,false);   &#xD;
+	&#xD;
+};&#xD;
+&#xD;
+self._showUpdate = function(o){&#xD;
+	self.set({&quot;caption&quot;:&quot;字典-修改&quot;});&#xD;
+    var view = this.get(&quot;view&quot;);&#xD;
+    &#xD;
+    var datasetQueryResult = view.id(&quot;datasetQueryResult&quot;);&#xD;
+    datasetQueryResult.set({&quot;readOnly&quot;:false});&#xD;
+    &#xD;
+    //设置确认按钮可见，因为在查看的时候会隐藏这个确定按钮&#xD;
+    var sb = view.id(&quot;buttonSave&quot;);&#xD;
+    sb.set({&quot;visible&quot;:true});&#xD;
+    &#xD;
+    //设置key这个输入框可操作，因为在修改和查看会修改这个输入框不可用&#xD;
+    view.id(&quot;name&quot;).set(&quot;readOnly&quot;,true);   &#xD;
+};&#xD;
+&#xD;
+self.addEnum = function(){&#xD;
+	var view = this.get(&quot;view&quot;);&#xD;
+	var datasetQueryResult  = view.id(&quot;datasetQueryResult&quot;);&#xD;
+	datasetQueryResult.getData(&quot;#&quot;).createChild(&quot;enumses&quot;,{});&#xD;
+	&#xD;
+};&#xD;
+self.delEnum = function(){&#xD;
+	var view = this.get(&quot;view&quot;);&#xD;
+	var datasetQueryResult  = view.id(&quot;datasetQueryResult&quot;);&#xD;
+	var record = datasetQueryResult.getData(&quot;#enumses&quot;).get(&quot;enumses&quot;).current;&#xD;
+	if(!record){&#xD;
+	    dorado.MessageBox.alert(&quot;请先选中要删除的资源!&quot;);&#xD;
+	    return;&#xD;
+	}&#xD;
+&#xD;
+	var id  = record.get(&quot;id&quot;);&#xD;
+	if(!id){&#xD;
+	    record.remove();&#xD;
+	    return;&#xD;
+	}&#xD;
+    var pid=record.get(&quot;categoryId&quot;);&#xD;
+	var ajaxActionDelEnum = view.id(&quot;ajaxActionDelEnum&quot;);&#xD;
+	ajaxActionDelEnum.set(&quot;parameter&quot;,id+&quot;@@&quot;+pid).execute(function(){&#xD;
+	    record.remove();&#xD;
+	});&#xD;
+};&#xD;
+&#xD;
+</ClientEvent>
+            <ClientEvent name="onClose">this.id(&quot;dialogEdit&quot;).hide();&#xD;
+this.id(&quot;datasetQueryResult&quot;).getData().cancel();</ClientEvent>
+            <Property name="center">true</Property>
+            <Property name="width">600</Property>
+            <Property name="height">500</Property>
+            <Property name="caption">内容</Property>
+            <Property name="modal">true</Property>
+            <Buttons>
+              <Button id="buttonSave">
+                <ClientEvent name="onClick">var action = this.id(&quot;updateAction&quot;);&#xD;
+if(view.id(&quot;datasetQueryResult&quot;).getData(&quot;#&quot;).validate()=='ok'){&#xD;
+    action.execute(function(){&#xD;
+        this.id(&quot;dialogEdit&quot;).hide();&#xD;
+    });&#xD;
+}&#xD;
+</ClientEvent>
+                <Property name="caption">保存</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+              </Button>
+              <Button id="buttonClose">
+                <ClientEvent name="onClick">this.id(&quot;dialogEdit&quot;).hide();&#xD;
+this.id(&quot;datasetQueryResult&quot;).getData().cancel();</ClientEvent>
+                <Property name="caption">关闭</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <UpdateAction id="updateAction">
+                <Property name="successMessage">保存成功!</Property>
+                <Property name="alwaysExecute">false</Property>
+                <Property name="confirmMessage">是否确认提交?</Property>
+                <Property name="dataResolver">smEnumCategorysCotroller#save</Property>
+                <Property name="parameter"></Property>
+                <UpdateItem>
+                  <Property name="dataSet">datasetQueryResult</Property>
+                  <Property name="firstResultOnly">false</Property>
+                  <Property name="dataPath">[#current]</Property>
+                </UpdateItem>
+              </UpdateAction>
+              <AjaxAction id="ajaxActionDelEnum">
+                <Property name="service">smEnumsCotroller#deleteEnumById</Property>
+                <Property name="successMessage">删除成功</Property>
+              </AjaxAction>
+              <AutoForm id="formEdit">
+                <Property name="cols">*</Property>
+                <Property name="autoCreateElements">false</Property>
+                <Property name="labelAlign">right</Property>
+                <Property name="dataSet">datasetQueryResult</Property>
+                <Property name="labelWidth">60</Property>
+                <AutoFormElement id="name">
+                  <Property name="name">name</Property>
+                  <Property name="property">name</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="rowSpan:3">
+                  <Property name="name">desc</Property>
+                  <Property name="property">desc</Property>
+                  <Property name="editorType">TextArea</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+              <ToolBar>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">this.id(&quot;dialogEdit&quot;).addEnum();</ClientEvent>
+                  <Property name="caption">新增</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">this.id(&quot;dialogEdit&quot;).delEnum();&#xD;
+</ClientEvent>
+                  <Property name="caption">删除</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">datasetQueryResult</Property>
+                <Property name="dataPath">#.enumses</Property>
+                <Property name="stretchColumnsMode">allColumns</Property>
+                <DataColumn name="name">
+                  <Property name="property">name</Property>
+                  <Property name="width">25%</Property>
+                </DataColumn>
+                <DataColumn name="desc">
+                  <Property name="property">desc</Property>
+                  <Property name="width">25%</Property>
+                </DataColumn>
+                <DataColumn name="memo">
+                  <Property name="property">memo</Property>
+                  <Property name="editorType">TextArea</Property>
+                  <Property name="width">50%</Property>
+                </DataColumn>
+              </DataGrid>
+            </Children>
+          </Dialog>
+          <UpdateAction id="updateActionDel">
+            <Property name="successMessage">删除成功!</Property>
+            <Property name="alwaysExecute">true</Property>
+            <Property name="confirmMessage">是否确认删除?</Property>
+            <Property name="dataResolver">smEnumCategorysCotroller#delete</Property>
+            <UpdateItem>
+              <Property name="dataSet">datasetQueryResult</Property>
+              <Property name="firstResultOnly">false</Property>
+              <Property name="dataPath">[#current]</Property>
+            </UpdateItem>
+          </UpdateAction>
+          <AjaxAction id="cacheClearAction">
+            <Property name="successMessage">操作成功!</Property>
+            <Property name="service">smEnumCategorysCotroller#clear</Property>
+            <Property name="confirmMessage">是否确定清空?</Property>
+          </AjaxAction>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+  </View>
+</ViewConfig>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeResult">
+      <Property name="creationType">com.lanshan.web.admin.model.SmSystem</Property>
+      <PropertyDef name="systemId">
+        <Property name="label">编码</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="memo">
+        <Property name="label">访问地址</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">var ds=view.id(&quot;dataSetResult&quot;);&#xD;
+self.query = function(){&#xD;
+	var dataSetResult = this.id(&quot;dataSetResult&quot;);	&#xD;
+	dataSetResult.flushAsync();&#xD;
+};&#xD;
+self.query();&#xD;
+&#xD;
+//显示增加&#xD;
+self.showAdd = function(){&#xD;
+	var dialog = self.id(&quot;dialogSystemEdit&quot;);	 &#xD;
+	dialog.show();&#xD;
+};</ClientEvent>
+    <DataSet id="dataSetResult">
+      <Property name="pageSize">15</Property>
+      <Property name="dataType">[dataTypeResult]</Property>
+      <Property name="dataProvider">smSystemCotroller#loadQueryResult</Property>
+    </DataSet>
+    <Container layoutConstraint="padding:10px">
+      <ToolBar>
+        <ToolBarButton id="addSmSystemBtn">
+          <ClientEvent name="onClick">this.showAdd();</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+          <Property name="caption">新增</Property>
+        </ToolBarButton>
+      </ToolBar>
+      <DataGrid>
+        <Property name="dataSet">dataSetResult</Property>
+        <DataColumn>
+          <Property name="property">systemId</Property>
+          <Property name="name">systemId</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">desc</Property>
+          <Property name="name">desc</Property>
+          <Editor/>
+        </DataColumn>
+        <DataColumn>
+          <Property name="property">memo</Property>
+          <Property name="name">memo</Property>
+          <Editor/>
+        </DataColumn>
+      </DataGrid>
+    </Container>
+    <Dialog id="dialogSystemEdit">
+      <ClientEvent name="onClose">view.id(&quot;dialogSystemEdit&quot;).hide(); &#xD;
+view.id(&quot;dataSetResult&quot;).getData().cancel(); </ClientEvent>
+      <ClientEvent name="onShow">self.set({&quot;caption&quot;:&quot;系统标识-新增&quot;});&#xD;
+var dataSetResult = view.id(&quot;dataSetResult&quot;);&#xD;
+dataSetResult.insert({},&quot;begin&quot;); </ClientEvent>
+      <Property name="height">320</Property>
+      <Property name="width">600</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var action =view.id(&quot;updateActionSystemEdit&quot;);&#xD;
+&#xD;
+action.execute(function(){  &#xD;
+    view.id(&quot;dialogSystemEdit&quot;).hide();&#xD;
+    view.query();&#xD;
+});</ClientEvent>
+          <Property name="icon"> url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="caption">保存</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dialogSystemEdit&quot;).hide(); &#xD;
+view.id(&quot;dataSetResult&quot;).getData().cancel(); </ClientEvent>
+          <Property name="icon"> url(>skin>common/icons.gif) -40px -0px</Property>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm id="formSystemEdit">
+          <Property name="dataSet">dataSetResult</Property>
+          <Property name="height">100%</Property>
+          <Property name="labelWidth">90</Property>
+          <Property name="width">100%</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="property">systemId</Property>
+            <Property name="name">systemId</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">desc</Property>
+            <Property name="name">desc</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="property">memo</Property>
+            <Property name="name">memo</Property>
+            <Property name="editorType">TextArea</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateActionSystemEdit">
+      <Property name="dataResolver">smSystemCotroller#save</Property>
+      <UpdateItem>
+        <Property name="dataPath">[#current]</Property>
+        <Property name="dataSet">dataSetResult</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

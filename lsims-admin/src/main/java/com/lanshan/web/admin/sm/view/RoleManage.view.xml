@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dataTypeUrl">
+      <Property name="creationType">com.lanshan.web.admin.model.SmUrl</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="icon">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="order">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="systemId">
+        <Property></Property>
+        <Property name="label">分布式系统中标识这个菜单前缀域名</Property>
+      </PropertyDef>
+      <PropertyDef name="url">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createDate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <Reference name="components">
+        <Property name="dataProvider">smComponentCotroller#loadQueryResult</Property>
+        <Property name="dataType">[smComponent]</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="urlId">$${this.id}</Property>
+          </Entity>
+        </Property>
+      </Reference>
+      <Reference name="children">
+        <Property name="dataProvider">smUrlController#loadUrlsEx</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dataTypePosi">
+      <Property name="creationType">com.lanshan.web.admin.model.SmPosition</Property>
+      <PropertyDef name="selected"/>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property></Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property></Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="code">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastUpdatePerson">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastUpdateTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="systemId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="createDate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtRole">
+      <Property name="creationType">com.lanshan.web.admin.model.SmRole</Property>
+      <PropertyDef name="desc">
+        <Property></Property>
+        <Property name="label">描述</Property>
+        <Validator name="validator1" type="length">
+          <Property name="minLength">0</Property>
+          <Property name="maxLength">120</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property></Property>
+        <Property name="label">名称</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="name">validator2</Property>
+          <Property name="minLength">1</Property>
+          <Property name="maxLength">32</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="enabled">
+        <Property></Property>
+        <Property name="label">是否可用</Property>
+        <Property name="defaultValue">1</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">是</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">否</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="systemId">
+        <Property></Property>
+        <Property name="label">分布式系统中标识</Property>
+      </PropertyDef>
+      <PropertyDef name="createDate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="rolePosiIds">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="rolePosiNames">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="roleResIds">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="roleResNames">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="smComponent">
+      <Property name="creationType">com.lanshan.web.admin.model.SmComponent</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="componentId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="urlId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="createDate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="lastUpdatePerson">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="lastUpdateTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="systemId">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">var dsRole = view.id(&quot;dsRole&quot;);&#xD;
+self.query=function(){ &#xD;
+	var textEditorTerm = view.get(&quot;#textEditorTerm&quot;);&#xD;
+	var term = textEditorTerm.get(&quot;value&quot;);&#xD;
+	if(term&amp;&amp;term!=&quot;&quot;){&#xD;
+		dsRole.set(&quot;parameter&quot;,{name:term});&#xD;
+	}else&#xD;
+	    dsRole.set(&quot;parameter&quot;,{name:null});&#xD;
+		&#xD;
+    view.id(&quot;listBoxPosistion&quot;).set(&quot;items&quot;,null);&#xD;
+	view.id(&quot;listBoxRes&quot;).set(&quot;items&quot;,null);  &#xD;
+	dsRole.flushAsync();&#xD;
+}  &#xD;
+&#xD;
+/**&#xD;
+ * 根据选择的资源id，拼装资源id串&#xD;
+ */&#xD;
+self.buildRes=function(){&#xD;
+	var nodes = view.get(&quot;#dataTreeUrl.nodes&quot;);&#xD;
+	var ids=null,names=null;&#xD;
+	function dosomething(nodes) {&#xD;
+		var begin = true;&#xD;
+		var res = false;//是否是资源&#xD;
+	    nodes.each(function(node) {&#xD;
+			node.expand();&#xD;
+			if(node.get(&quot;checked&quot;)||node.get(&quot;checked&quot;)==null){&#xD;
+				var data = node.get(&quot;data&quot;);&#xD;
+				var id = data.get(&quot;id&quot;);&#xD;
+				var componentId = data._data.desc;&#xD;
+				if(componentId){&#xD;
+					res=true;&#xD;
+					if(begin){&#xD;
+					   ids+=&quot;(&quot;+id;&#xD;
+					   names+=&quot;(&quot;+componentId;&#xD;
+					}else{&#xD;
+					   ids+=&quot;,&quot;+id;&#xD;
+					   names+=&quot;,&quot;+componentId;&#xD;
+					}&#xD;
+				}else{&#xD;
+					var name = node.get(&quot;data.name&quot;);&#xD;
+					if(ids==null){&#xD;
+					   ids=id;&#xD;
+					   names=name;&#xD;
+					}else{&#xD;
+					   ids+=&quot;;&quot;+id;&#xD;
+					   names+=&quot;;&quot;+name;&#xD;
+					}&#xD;
+				}&#xD;
+				begin=false;&#xD;
+			}&#xD;
+	        dosomething(node.get(&quot;nodes&quot;));&#xD;
+	    });&#xD;
+		if(res){&#xD;
+			ids+=&quot;)&quot;;&#xD;
+			names+=&quot;)&quot;;&#xD;
+		}&#xD;
+	}&#xD;
+	dosomething(nodes);&#xD;
+	var current=dsRole.getData(&quot;#&quot;);&#xD;
+	current.set(&quot;roleResIds&quot;,ids);&#xD;
+	current.set(&quot;roleResNames&quot;,names); &#xD;
+}&#xD;
+&#xD;
+self.loadResIds=function (){ &#xD;
+	var roleResIds = dsRole.getData(&quot;#&quot;).get(&quot;roleResIds&quot;);&#xD;
+	if(!roleResIds){&#xD;
+		//加载resids &#xD;
+		var action = view.id(&quot;ajaxActionResIds&quot;);&#xD;
+	    roleResIds =action.set(&quot;parameter&quot;,dsRole.getData(&quot;#&quot;).get(&quot;id&quot;)).execute();  &#xD;
+		dsRole.getData(&quot;#&quot;).set(&quot;roleResIds&quot;,roleResIds);&#xD;
+	}&#xD;
+ }&#xD;
+/**&#xD;
+ * 勾选&#xD;
+ */  &#xD;
+self.checkUrlResTree=function(){&#xD;
+	var nodes = view.get(&quot;#dataTreeUrl.nodes&quot;); &#xD;
+	var roleResIds = dsRole.getData(&quot;#&quot;).get(&quot;roleResIds&quot;);&#xD;
+	var curRoleName=dsRole.getData(&quot;#&quot;).get(&quot;name&quot;);&#xD;
+	function dosomething(nodes,value) {&#xD;
+	    nodes.each(function(node) {&#xD;
+			if(curRoleName==&quot;defaultRole&quot;){    //默认角色 全部勾选&#xD;
+				node.set(&quot;checked&quot;,true);&#xD;
+			}else{&#xD;
+				if(isSubString(value,node.get(&quot;data.id&quot;)))&#xD;
+			       node.set(&quot;checked&quot;,true);&#xD;
+			    else&#xD;
+			       node.set(&quot;checked&quot;,false);&#xD;
+			} &#xD;
+	        dosomething(node.get(&quot;nodes&quot;),value);&#xD;
+	    });&#xD;
+	}&#xD;
+	//判断子串&#xD;
+	function isSubString(src,sub){&#xD;
+		if(!src||src==&quot;&quot;) return false;&#xD;
+		if(src==sub) &#xD;
+		   return true;&#xD;
+		if(src.indexOf(sub+&quot;;&quot;)==0)&#xD;
+		   return true;&#xD;
+		if(src.indexOf(&quot;;&quot;+sub)!=-1&amp;&amp;src.indexOf(&quot;;&quot;+sub)==src.length-sub.length-1)&#xD;
+		   return true;&#xD;
+	    if(src.indexOf(&quot;;&quot;+sub+&quot;;&quot;)>0)&#xD;
+		   return true;&#xD;
+		if(src.indexOf(&quot;,&quot;+sub+&quot;,&quot;)>0)&#xD;
+		   return true;&#xD;
+		if(src.indexOf(&quot;(&quot;+sub+&quot;)&quot;)>0)&#xD;
+		   return true;&#xD;
+		if(src.indexOf(&quot;(&quot;+sub+&quot;,&quot;)>0)&#xD;
+		   return true;&#xD;
+		if(src.indexOf(&quot;,&quot;+sub+&quot;)&quot;)>0)&#xD;
+		   return true;&#xD;
+		return false;&#xD;
+	}&#xD;
+	dosomething(nodes,roleResIds);&#xD;
+}&#xD;
+  &#xD;
+self.innerResource=function(){ &#xD;
+   view.id(&quot;listBoxRes&quot;).set(&quot;items&quot;,null); &#xD;
+   var d = dsRole.getData(&quot;#&quot;);&#xD;
+   if(!d){&#xD;
+   		return;&#xD;
+   }&#xD;
+   var data=d.get(&quot;roleResNames&quot;);&#xD;
+   if(!data){&#xD;
+	  var action = view.id(&quot;ajaxActionResNames&quot;);&#xD;
+	  data =action.set(&quot;parameter&quot;,dsRole.getData(&quot;#&quot;).get(&quot;id&quot;)).execute();  &#xD;
+   }&#xD;
+   if(data){&#xD;
+	  view.id(&quot;listBoxRes&quot;).set(&quot;items&quot;,data); &#xD;
+   }&#xD;
+&#xD;
+} &#xD;
+&#xD;
+self.loadPosi = false;&#xD;
+var dsPosi = view.id(&quot;dataSetPositions&quot;);&#xD;
+/**&#xD;
+ * 加载岗位信息&#xD;
+ */&#xD;
+self.loadPositions=function(){&#xD;
+	dsPosi.set(&quot;parameter&quot;,{});&#xD;
+		dsPosi.flushAsync(&#xD;
+		   function(){&#xD;
+		   	   checkPosi(dsRole.getData(&quot;#&quot;).get(&quot;rolePosiIds&quot;));&#xD;
+		   }&#xD;
+	 );&#xD;
+	/**&#xD;
+     * 预勾选当前角色的岗位&#xD;
+     * @param {Object} rolePosiIds 当前角色的岗位id串&#xD;
+     */&#xD;
+	function checkPosi(rolePosiIds){ &#xD;
+	   if(rolePosiIds){&#xD;
+	   	   var ar = rolePosiIds.split(&quot;,&quot;);&#xD;
+	   	   dsPosi.getData()&#xD;
+	        .each(function(node){ &#xD;
+	         node.set(&quot;selected&quot;,ar.indexOf(node.get(&quot;id&quot;)+&quot;&quot;)>-1);&#xD;
+           }&#xD;
+		   ); &#xD;
+	   }&#xD;
+       &#xD;
+    }&#xD;
+}&#xD;
+&#xD;
+self.buildPositions=function(){ &#xD;
+	var ids=&quot;&quot;;&#xD;
+	dsPosi.getData().each(&#xD;
+	   function(node){ &#xD;
+	      if(node.get(&quot;selected&quot;)){&#xD;
+	   	    ids+=&quot;;&quot;+node.get(&quot;id&quot;);&#xD;
+	      } &#xD;
+       }&#xD;
+	);  &#xD;
+	var current=dsRole.getData(&quot;#&quot;);&#xD;
+	current.set(&quot;rolePosiIds&quot;,ids);&#xD;
+}&#xD;
+&#xD;
+self.innerPositions=function(){&#xD;
+	view.id(&quot;listBoxPosistion&quot;).set(&quot;items&quot;,null);&#xD;
+	var d = dsRole.getData(&quot;#&quot;);&#xD;
+	if(!d){&#xD;
+		return;&#xD;
+	}&#xD;
+   	var data = d.get(&quot;rolePosiNames&quot;); &#xD;
+   	if(data){&#xD;
+	  	view.id(&quot;listBoxPosistion&quot;).set(&quot;items&quot;,data.split(&quot;,&quot;)); &#xD;
+   	}&#xD;
+}&#xD;
+  &#xD;
+ self.showAuitLog=function(){&#xD;
+	 var record = this.id(&quot;dsRole&quot;).getData(&quot;#&quot;);    &#xD;
+	 var auditId=record.get(&quot;id&quot;);&#xD;
+	 &#xD;
+	&#xD;
+     var ap={};&#xD;
+     ap.auditEntity=record;&#xD;
+     ap.auditId=auditId;&#xD;
+     var p={};&#xD;
+     p.appParam=ap;&#xD;
+&#xD;
+     view.id(&quot;dialogAudit&quot;).show(p); &#xD;
+}</ClientEvent>
+    <DataSet id="dsRole">
+      <ClientEvent name="onLoadData">view.innerPositions();&#xD;
+view.innerResource();</ClientEvent>
+      <Property name="dataType">[dtRole]</Property>
+      <Property name="dataProvider">smRoleController#loadQueryResult</Property>
+      <Property name="pageSize">15</Property>
+      <Property name="parameter">
+        <Entity/>
+      </Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">72%</Property>
+      <MainControl>
+        <TabControl>
+          <ControlTab>
+            <Property name="caption">菜单资源</Property>
+            <ListBox id="listBoxRes"/>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">关联岗位</Property>
+            <ListBox id="listBoxPosistion"/>
+          </ControlTab>
+        </TabControl>
+      </MainControl>
+      <SideControl>
+        <GroupBox>
+          <Property name="collapseable">true</Property>
+          <Property name="caption">角色信息</Property>
+          <Buttons/>
+          <Children>
+            <ToolBar>
+              <ToolBarLabel>
+                <Property name="text">查询条件</Property>
+              </ToolBarLabel>
+              <TextEditor id="textEditorTerm"/>
+              <ToolBarButton>
+                <ClientEvent name="onClick">view.query();&#xD;
+</ClientEvent>
+                <Property name="caption">查询</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
+              </ToolBarButton>
+              <DataPilot id="btn_add_del">
+                <ClientEvent name="onSubControlAction">var dsRole =view.id(&quot;dsRole&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:  &#xD;
+	    dsRole.insert({});&#xD;
+		view.id(&quot;dialogRole&quot;).show(); &#xD;
+		//view.updateDataTreeUrlData(true); &#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	case &quot;-&quot;:&#xD;
+	    var cd= dsRole.getData(&quot;#&quot;);   &#xD;
+	    var action = view.id(&quot;ajaxActionDel&quot;);&#xD;
+	    action.set(&quot;parameter&quot;,cd.get(&quot;id&quot;)).execute(function(){&#xD;
+		     view.query();&#xD;
+	    }); &#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+}&#xD;
+</ClientEvent>
+                <Property name="dataSet">dsRole</Property>
+                <Property name="itemCodes">pages,+,-</Property>
+                <Property name="visible">true</Property>
+              </DataPilot>
+              <ToolBarButton id="btn_upd">
+                <ClientEvent name="onClick">var data=view.id(&quot;dsRole&quot;).getData(&quot;#&quot;);&#xD;
+if(data){&#xD;
+	view.loadResIds();	&#xD;
+	view.id(&quot;dialogRole&quot;).show();  &#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前没有数据可供编辑&quot;);&#xD;
+}&#xD;
+</ClientEvent>
+                <Property name="caption">修改</Property>
+                <Property name="icon">url(skin>common/icons.gif) -200px 0px</Property>
+              </ToolBarButton>
+            </ToolBar>
+            <DataGrid layoutConstraint="center">
+              <ClientEvent name="onDataRowClick">view.innerResource();&#xD;
+view.innerPositions();&#xD;
+</ClientEvent>
+              <Property name="dataSet">dsRole</Property>
+              <Property name="readOnly">true</Property>
+              <DataColumn name="name">
+                <Property name="property">name</Property>
+              </DataColumn>
+              <DataColumn>
+                <Property name="editable">true</Property>
+                <Property name="name">enabled</Property>
+                <Property name="property">enabled</Property>
+                <Property name="visible">true</Property>
+                <Property name="readOnly">false</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn name="desc">
+                <Property name="property">desc</Property>
+              </DataColumn>
+            </DataGrid>
+          </Children>
+        </GroupBox>
+      </SideControl>
+    </SplitPanel>
+    <Dialog id="dialogRole">
+      <ClientEvent name="onShow">view.loadPositions();&#xD;
+view.checkUrlResTree();&#xD;
+</ClientEvent>
+      <ClientEvent name="onClose">view.id(&quot;dialogRole&quot;).hide();&#xD;
+view.id(&quot;dsRole&quot;).getData().cancel(); </ClientEvent>
+      <Property name="center">true</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">600</Property>
+      <Property name="height">630</Property>
+      <Property name="caption">角色管理</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.buildRes();&#xD;
+view.buildPositions();&#xD;
+view.id(&quot;updateActionRole&quot;).execute(function(){&#xD;
+   view.id(&quot;dialogRole&quot;).hide();&#xD;
+   view.query();&#xD;
+});</ClientEvent>
+          <Property name="caption">确认</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">//var entity = view.get(&quot;#dataTreeGridRole.currentEntity&quot;);&#xD;
+//if(entity.get(&quot;id&quot;)==null)&#xD;
+ // entity.remove();&#xD;
+//else&#xD;
+  // view.id(&quot;dataSetRole&quot;).getData().cancel();&#xD;
+view.id(&quot;dialogRole&quot;).hide();&#xD;
+view.id(&quot;dsRole&quot;).getData().cancel(); &#xD;
+</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="cols">*,*</Property>
+          <Property name="dataSet">dsRole</Property>
+          <AutoFormElement>
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">enabled</Property>
+            <Property name="property">enabled</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">desc</Property>
+            <Property name="property">desc</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+        <TabControl>
+          <ControlTab>
+            <Property name="caption">菜单资源</Property>
+            <DataTree id="dataTreeUrl">
+              <ClientEvent name="onNodeCheckedChange">if(arg.node.get(&quot;checked&quot;)){//处理结点选中，其所有父级及以上父级都选中&#xD;
+	var p = arg.node.get(&quot;parent&quot;);&#xD;
+	while(p){&#xD;
+		p.set(&quot;checked&quot;,true);&#xD;
+		p = p.get(&quot;parent&quot;);&#xD;
+	}&#xD;
+}else{//处理结点取消，其所有子结点都要取消&#xD;
+	function canelChild(subs){&#xD;
+		subs.each(function(s){&#xD;
+			s.set(&quot;checked&quot;,false);&#xD;
+			canelChild(s.get(&quot;nodes&quot;));&#xD;
+		});&#xD;
+	}&#xD;
+	canelChild(arg.node.get(&quot;nodes&quot;));&#xD;
+}</ClientEvent>
+              <ClientEvent name="onDataNodeCreate"> &#xD;
+var dsRole = view.id(&quot;dsRole&quot;);&#xD;
+var roleResIds = dsRole.getData(&quot;#&quot;).get(&quot;roleResIds&quot;);&#xD;
+ &#xD;
+if(roleResIds &amp;&amp; roleResIds.indexOf(arg.data.get(&quot;id&quot;))>-1){&#xD;
+	arg.node.set(&quot;checked&quot;,true);&#xD;
+}else{&#xD;
+	arg.node.set(&quot;checked&quot;,false);&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="dataSet">dataSetUrl</Property>
+              <Property name="height">370</Property>
+              <Property name="currentNodeDataPath">currentUrl2</Property>
+              <BindingConfigs>
+                <BindingConfig>
+                  <Property name="childrenProperty">children</Property>
+                  <Property name="labelProperty">name</Property>
+                  <Property name="tipProperty">desc</Property>
+                  <Property name="recursive">true</Property>
+                  <Property name="expandLevel">4</Property>
+                  <Property name="iconProperty">icon</Property>
+                  <Property name="checkable">true</Property>
+                  <Property name="autoCheckChildren">false</Property>
+                  <BindingConfig>
+                    <Property name="childrenProperty">components</Property>
+                    <Property name="labelProperty">desc</Property>
+                    <Property name="name">id</Property>
+                    <Property name="checkable">true</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -40px -20px</Property>
+                    <Property name="autoCheckChildren">false</Property>
+                  </BindingConfig>
+                </BindingConfig>
+              </BindingConfigs>
+            </DataTree>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">关联岗位</Property>
+            <DataGrid id="datagridPositions">
+              <Property name="dataSet">dataSetPositions</Property>
+              <Property name="selectionMode">multiRows</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="rowSelectionProperty">selected</Property>
+              <RowSelectorColumn id="selectedPosi"/>
+              <DataColumn name="selected">
+                <Property name="property">selected</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="id">
+                <Property name="property">id</Property>
+                <Property name="visible">false</Property>
+              </DataColumn>
+              <DataColumn name="name">
+                <Property name="property">name</Property>
+              </DataColumn>
+              <DataColumn name="desc">
+                <Property name="property">desc</Property>
+              </DataColumn>
+            </DataGrid>
+          </ControlTab>
+        </TabControl>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateActionRole">
+      <ClientEvent name="onSuccess">view.id(&quot;dialogRole&quot;).hide();&#xD;
+view.query();&#xD;
+</ClientEvent>
+      <Property name="successMessage">保存成功！</Property>
+      <Property name="dataResolver">smRoleController#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsRole</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <AjaxAction id="ajaxActionDel">
+      <Property name="confirmMessage">确定要删除角色信息吗?</Property>
+      <Property name="successMessage">删除成功</Property>
+      <Property name="service">smRoleController#deleteRole</Property>
+    </AjaxAction>
+    <DataSet id="dataSetUrl">
+      <Property name="dataType">[dataTypeUrl]</Property>
+      <Property name="dataProvider">smUrlController#loadUrlsEx</Property>
+    </DataSet>
+    <AjaxAction id="ajaxActionResIds">
+      <Property name="service">smRoleController#loadResIds</Property>
+      <Property name="async">false</Property>
+    </AjaxAction>
+    <AjaxAction id="ajaxActionResNames">
+      <Property name="service">smRoleController#loadResNames</Property>
+      <Property name="async">false</Property>
+    </AjaxAction>
+    <DataSet id="dataSetPositions">
+      <Property name="dataType">[dataTypePosi]</Property>
+      <Property name="dataProvider">smPositionCotrller#loadQueryResult</Property>
+      <Property name="loadMode">manual</Property>
+    </DataSet>
+  </View>
+</ViewConfig>

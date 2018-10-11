@@ -1,0 +1,74 @@
+server:
+  port: 9060
+  servlet:
+    context-path: /uaa
+    session:
+      timeout: 60000
+        
+  use-forward-headers: false
+  tomcat:
+    uri-encoding: UTF-8
+spring:
+  application:
+    name: uaa-server
+  zipkin:
+      base-url: http://localhost:9050
+  jpa:
+    show-sql: true
+  datasource:
+    druid:
+      url: jdbc:mysql://47.98.217.126:3306/lsims?useUnicode=true&characterEncoding=UTF-8
+      username: lsims
+      password: lsims
+      driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    host: 47.98.217.126
+    port: 6379
+    password: trAns59988
+  messages:
+    basename: classpath:i18n/messages
+    encoding: UTF-8
+eureka:
+  instance:
+    prefer-ip-address: true #ʹ��IPע��
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+    ##续约更新时间间隔设置5秒，m默认30s
+    lease-renewal-interval-in-seconds: 5
+    ##续约到期时间10秒，默认是90秒
+    lease-expiration-duration-in-seconds: 10
+  client:
+      service-url:
+        defaultZone: http://127.0.0.1:9010/eureka/
+endpoints:
+  health:
+    sensitive: false
+    enabled: true
+security:
+  basic:
+    enabled: false
+  user:
+    password: password
+  ignored: /css/**,/js/**,/favicon.ico,/webjars/**
+  sessions: NEVER
+
+jwt:
+  access:
+    token:
+      converter:
+        resource:
+          location: classpath:keystore.jks
+          password: foobar
+          key-pair-alias: test
+     
+http:
+  authorize:
+    #不走认证的url集合
+    matchers: /**/css/**,/**/js/**,/**/plugin/**,/**/template/**,/**/img/**,/**/fonts/**,/**/cvr100u/**,/css/**,/js/**,/plugin/**,/template/**,/img/**,/fonts/**,/cvr100u/**
+  login:
+    path: /login
+logging:
+  config: classpath:logback.xml
+  level:
+    org:
+      springframework:
+        web: info

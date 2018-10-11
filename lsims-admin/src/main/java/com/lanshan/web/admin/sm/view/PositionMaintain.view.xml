@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="postition" parent="smPosition">
+      <PropertyDef name="name">
+        <Property></Property>
+        <Property name="label">名称</Property>
+        <Property name="required">true</Property>
+        <Validator type="length">
+          <Property name="name">nameLengthValid</Property>
+          <Property name="minLength">1</Property>
+          <Property name="maxLength">20</Property>
+          <Property name="defaultResultState">warn</Property>
+          <Property name="runAt">client</Property>
+          <Property name="resultMessage">岗位名称的长度不能超过20</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property></Property>
+        <Property name="label">描叙</Property>
+        <Validator type="length">
+          <Property name="name">descLengthValid</Property>
+          <Property name="minLength">0</Property>
+          <Property name="maxLength">110</Property>
+          <Property name="defaultResultState">warn</Property>
+        </Validator>
+      </PropertyDef>
+      <Reference name="roles">
+        <Property name="dataType">[smRole]</Property>
+        <Property name="parameter">
+          <Entity>
+            <Property name="positionId">$${this.id}</Property>
+          </Entity>
+        </Property>
+        <Property name="dataProvider">smPositionCotrller#loadRoles</Property>
+      </Reference>
+      <PropertyDef name="rolesFullName">
+        <Property></Property>
+        <Property name="label">关联角色</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="smRole">
+      <Property name="creationType">com.lanshan.web.admin.model.SmRole</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="desc">
+        <Property></Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="enabled">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="name">
+        <Property></Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="systemId">
+        <Property></Property>
+        <Property name="label">分布式系统中标识</Property>
+      </PropertyDef>
+      <PropertyDef name="createDate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="selected"/>
+    </DataType>
+  </Model>
+  <View>
+    <ClientEvent name="onReady">var ds = this.id(&quot;datasetPosition&quot;); &#xD;
+self.query = function(){ &#xD;
+    ds.flushAsync();    &#xD;
+};&#xD;
+&#xD;
+self.query();&#xD;
+&#xD;
+self.innerResource=function(){ &#xD;
+   view.id(&quot;resourceList&quot;).set(&quot;items&quot;,null); &#xD;
+   var action = view.id(&quot;ajaxActionRes&quot;);&#xD;
+   action.set(&quot;parameter&quot;,ds.getData(&quot;#&quot;).get(&quot;id&quot;)).execute(&#xD;
+      function(data){&#xD;
+	  	view.id(&quot;resourceList&quot;).set(&quot;items&quot;,data);  &#xD;
+	  }&#xD;
+   );  &#xD;
+   &#xD;
+} &#xD;
+self.innerUsers=function(){ &#xD;
+   view.id(&quot;userList&quot;).set(&quot;items&quot;,null); &#xD;
+   var action = view.id(&quot;ajaxActionUser&quot;);&#xD;
+   action.set(&quot;parameter&quot;,ds.getData(&quot;#&quot;).get(&quot;id&quot;)).execute(&#xD;
+      function(data){&#xD;
+	  	view.id(&quot;userList&quot;).set(&quot;items&quot;,data);  &#xD;
+	  }&#xD;
+   );  &#xD;
+   &#xD;
+}&#xD;
+&#xD;
+self.loadRoles=function(){&#xD;
+	ds.getData(&quot;#&quot;).get(&quot;roles&quot;);&#xD;
+}&#xD;
+self.showAuitLog=function(){&#xD;
+	 var record = this.id(&quot;datasetPosition&quot;).getData(&quot;#&quot;);    &#xD;
+	 var auditId=record.get(&quot;id&quot;); &#xD;
+     var ap={};&#xD;
+     ap.auditEntity=record;&#xD;
+     ap.auditId=auditId;&#xD;
+     var p={};&#xD;
+     p.appParam=ap; &#xD;
+     view.id(&quot;dialogAudit&quot;).show(p); &#xD;
+}</ClientEvent>
+    <DataSet id="datasetPosition">
+      <ClientEvent name="onLoadData">view.innerUsers();&#xD;
+view.loadRoles();&#xD;
+view.innerResource();&#xD;
+</ClientEvent>
+      <Property name="dataType">[postition]</Property>
+      <Property name="dataProvider">smPositionCotrller#queryResult</Property>
+      <Property name="parameter"></Property>
+      <Property name="pageSize">15</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">70%</Property>
+      <MainControl>
+        <TabControl>
+          <ControlTab>
+            <Property name="caption">用户信息</Property>
+            <ListBox id="userList"/>
+          </ControlTab>
+          <ControlTab>
+            <Property name="caption">菜单资源</Property>
+            <ListBox id="resourceList"/>
+          </ControlTab>
+        </TabControl>
+      </MainControl>
+      <SideControl>
+        <GroupBox>
+          <Property name="caption">岗位信息</Property>
+          <Buttons/>
+          <Children>
+            <ToolBar layoutConstraint="center">
+              <Property name="width">100%</Property>
+              <DataPilot>
+                <Property name="dataSet">datasetPosition</Property>
+              </DataPilot>
+              <ToolBarButton id="buttonAdd">
+                <ClientEvent name="onClick">var dialog = view.id(&quot;dlgPositionEdit&quot;);&#xD;
+var ds = view.id(&quot;datasetPosition&quot;);&#xD;
+ds.set(&quot;readOnly&quot;,false);&#xD;
+ds.getData().insert({},&quot;begin&quot;);&#xD;
+dialog.set(&quot;caption&quot;,&quot;新增岗位信息&quot;);&#xD;
+dialog.show();</ClientEvent>
+                <Property name="caption">新增</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+              </ToolBarButton>
+              <ToolBarButton id="buttonEdit">
+                <ClientEvent name="onClick">var position=view.get(&quot;#datasetPosition&quot;).getData(&quot;#&quot;);&#xD;
+if(position){&#xD;
+	view.id(&quot;datasetPosition&quot;).getData(&quot;#roles&quot;);&#xD;
+	var dialog=view.id(&quot;dlgPositionEdit&quot;);&#xD;
+	dialog.set(&quot;caption&quot;,&quot;修改岗位信息&quot;);&#xD;
+	dialog.show();&#xD;
+	view.get(&quot;#datasetPosition&quot;).set(&quot;readOnly&quot;,false); &#xD;
+}</ClientEvent>
+                <Property name="caption">修改</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
+              </ToolBarButton>
+              <ToolBarButton id="buttonDel">
+                <ClientEvent name="onClick">var record = this.id(&quot;datasetPosition&quot;).getData(&quot;#&quot;);    &#xD;
+var action = view.id(&quot;ajaxActionDel&quot;);&#xD;
+action.set(&quot;parameter&quot;,record.get(&quot;id&quot;)).execute(function(){&#xD;
+    view.query();&#xD;
+});</ClientEvent>
+                <Property name="caption">删除</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+              </ToolBarButton>
+            </ToolBar>
+            <DataGrid layoutConstraint="center">
+              <ClientEvent name="onDataRowClick">view.loadRoles();&#xD;
+view.innerUsers();&#xD;
+view.innerResource();&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="dataSet">datasetPosition</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="showFilterBar">true</Property>
+              <Property name="filterMode">serverSide</Property>
+              <DataColumn name="name">
+                <Property name="property">name</Property>
+              </DataColumn>
+            </DataGrid>
+          </Children>
+        </GroupBox>
+      </SideControl>
+    </SplitPanel>
+    <Dialog id="dlgPositionEdit">
+      <ClientEvent name="onClose">view.id(&quot;dlgPositionEdit&quot;).hide();&#xD;
+view.id(&quot;datasetPosition&quot;).getData().cancel();</ClientEvent>
+      <Property name="height">400</Property>
+      <Property name="width">600</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var action =view.id(&quot;updateActionPositionEdit&quot;);&#xD;
+action.execute(function(){  &#xD;
+    view.id(&quot;dlgPositionEdit&quot;).hide();&#xD;
+    view.query();&#xD;
+});&#xD;
+&#xD;
+</ClientEvent>
+          <Property name="icon"> url(>skin>common/icons.gif) -140px -20px</Property>
+          <Property name="caption">保存</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;dlgPositionEdit&quot;).hide();&#xD;
+view.id(&quot;datasetPosition&quot;).getData().cancel();</ClientEvent>
+          <Property name="icon"> url(>skin>common/icons.gif) -40px -0px</Property>
+          <Property name="caption">关闭</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">datasetPosition</Property>
+          <Property name="cols">*,*</Property>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">desc</Property>
+            <Property name="property">desc</Property>
+            <Property name="editorType">TextArea</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">rolesFullName</Property>
+            <Property name="property">rolesFullName</Property>
+            <Property name="editorType">TextArea</Property>
+            <Property name="trigger">triggerRoles</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateActionPositionEdit">
+      <Property name="dataResolver">smPositionCotrller#save</Property>
+      <UpdateItem>
+        <Property name="dataSet">datasetPosition</Property>
+        <Property name="dataPath">[#current]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <AjaxAction id="ajaxActionUser">
+      <Property name="service">smPositionCotrller#loadUsers</Property>
+    </AjaxAction>
+    <AjaxAction id="ajaxActionRes">
+      <Property name="service">smPositionCotrller#loadResources</Property>
+    </AjaxAction>
+    <AjaxAction id="ajaxActionDel">
+      <Property name="confirmMessage">是否真的要删除该岗位？</Property>
+      <Property name="successMessage">删除成功</Property>
+      <Property name="service">smPositionCotrller#deleteById</Property>
+    </AjaxAction>
+    <Dialog id="dialogTableSelectRole">
+      <ClientEvent name="onReady">self.setBack = function(o){&#xD;
+	if( o ){&#xD;
+		var cb = this.$$callback;&#xD;
+        if(cb){&#xD;
+			cb(o);  &#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+var dataset =  view.id(&quot;dataSetRole&quot;);&#xD;
+self._$doShow = self.doShow;&#xD;
+self.doShow = function(p)&#xD;
+{&#xD;
+	if(!p.oParam)&#xD;
+	   p.oParam = p;&#xD;
+	this._$oParam = p.oParam;&#xD;
+	var o = this._$oParam;&#xD;
+	if(o.caption){&#xD;
+        self.set(&quot;width&quot;,o.caption);&#xD;
+    }&#xD;
+	if(o.width){&#xD;
+		self.set(&quot;width&quot;,o.width);&#xD;
+	}&#xD;
+	if(o.height){&#xD;
+		self.set(&quot;height&quot;,o.height);&#xD;
+	}&#xD;
+	view.id(&quot;dataGridSelectRole&quot;).set(&quot;selectionMode&quot;,'multiRows');	 &#xD;
+	if(o.appParam){		&#xD;
+		dataset.set(&quot;parameter&quot;,o.appParam);&#xD;
+	} &#xD;
+	dataset.flushAsync(&#xD;
+	   function( ){&#xD;
+	   	  selectRoles( );&#xD;
+	   }&#xD;
+	);&#xD;
+	this.$$callback = o[&quot;onSelect&quot;];&#xD;
+	this._$doShow(p);	&#xD;
+};&#xD;
+&#xD;
+function selectRoles( ){&#xD;
+	var roles=view.id(&quot;datasetPosition&quot;).getData(&quot;#.roles&quot;).toJSON();  &#xD;
+	for(var i=0;i&lt;roles.length;i++){&#xD;
+		dataset.getData().each(function(n){&#xD;
+			if(n.get(&quot;id&quot;)==roles[i].id){&#xD;
+				n.set(&quot;selected&quot;,true);&#xD;
+			}&#xD;
+		});&#xD;
+	}&#xD;
+	&#xD;
+	 &#xD;
+}&#xD;
+</ClientEvent>
+      <Property name="center">true</Property>
+      <Property name="height">400</Property>
+      <Property name="modal">true</Property>
+      <Property name="width">600</Property>
+      <Property name="caption">角色选择</Property>
+      <Buttons>
+        <Button id="btnSelRoleOk">
+          <ClientEvent name="onClick">var dialog=this.id(&quot;dialogTableSelectRole&quot;);&#xD;
+var dataTable = this.id(&quot;dataGridSelectRole&quot;);&#xD;
+var datas = dataTable.get(&quot;selection&quot;);	&#xD;
+if(!datas){&#xD;
+	dorado.MessageBox.alert(&quot;请选择角色！&quot;);&#xD;
+}else{ &#xD;
+    dialog.setBack(datas);&#xD;
+	dialog.hide();&#xD;
+}</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button id="btnSelRoleCancel">
+          <ClientEvent name="onClick">var dialog = this.id(&quot;dialogTableSelectRole&quot;);&#xD;
+dialog.hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(skin>common/icons.gif) -40px 0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <DataGrid id="dataGridSelectRole">
+          <ClientEvent name="onDataRowDoubleClick">/*&#xD;
+var entity=this.id(&quot;dataSetSelectDept&quot;).getData(&quot;#&quot;); //取得原始数据列表&#xD;
+var selectedItems=this.id(&quot;dataGridSelectDept&quot;).get(&quot;selection&quot;); //定义一个数组&#xD;
+if(this.id(&quot;dataGridSelectDept&quot;).get(&quot;selectionMode&quot;)==&quot;singleRow&quot;){&#xD;
+	if(!selectedItems)&#xD;
+	  selectedItems = entity;&#xD;
+    else&#xD;
+      selectedItems = null;&#xD;
+}else{&#xD;
+	var find = false;&#xD;
+	selectedItems.each(function(item){&#xD;
+		if(item.get(&quot;id&quot;)==entity.get(&quot;id&quot;))&#xD;
+		   find=true;&#xD;
+	});&#xD;
+	if(!find)&#xD;
+	  selectedItems.push(entity);&#xD;
+	else&#xD;
+	  selectedItems.remove(entity);&#xD;
+}&#xD;
+this.id(&quot;dataGridSelectDept&quot;).set(&quot;selection&quot;,selectedItems);&#xD;
+*/&#xD;
+</ClientEvent>
+          <Property name="dataSet">dataSetRole</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="selectionMode">multiRows</Property>
+          <Property name="showFilterBar">true</Property>
+          <Property name="rowSelectionProperty">selected</Property>
+          <RowSelectorColumn id="rowSelectorRole">
+            <Property name="visible">true</Property>
+          </RowSelectorColumn>
+          <DataColumn name="id">
+            <Property name="property">id</Property>
+            <Property name="visible">false</Property>
+            <Property name="caption">名称</Property>
+          </DataColumn>
+          <DataColumn name="name">
+            <Property name="property">name</Property>
+          </DataColumn>
+          <DataColumn name="desc">
+            <Property name="property">desc</Property>
+          </DataColumn>
+          <DataColumn id="selected">
+            <Property name="visible">false</Property>
+            <Editor/>
+          </DataColumn>
+        </DataGrid>
+        <DataSet id="dataSetRole">
+          <Property name="dataType">[smRole]</Property>
+          <Property name="dataProvider">smRoleCotroller#loadQueryResult</Property>
+          <Property name="loadMode">manual</Property>
+        </DataSet>
+      </Children>
+    </Dialog>
+    <Trigger id="triggerRoles">
+      <ClientEvent name="onExecute">var record = view.id(&quot;datasetPosition&quot;).getData(&quot;#&quot;);  &#xD;
+var config = {&#xD;
+    caption: &quot;角色选择&quot;,  &#xD;
+    onSelect: function(o){ &#xD;
+		if(o){&#xD;
+			 record.set(&quot;roles&quot;,o);&#xD;
+			 var roleName=&quot;&quot;;&#xD;
+			 o.each(function(node) { &#xD;
+		        roleName+=&quot;,&quot;+ node.get(&quot;name&quot;); &#xD;
+	        }); &#xD;
+			record.set(&quot;rolesFullName&quot;,roleName.substring(1));&#xD;
+        }else{&#xD;
+			dorado.MessageBox.alert(&quot;请选择有效角色！&quot;);&#xD;
+			return false;	&#xD;
+		}   &#xD;
+    }&#xD;
+}&#xD;
+this.id(&quot;dialogTableSelectRole&quot;).show(config);</ClientEvent>
+    </Trigger>
+  </View>
+</ViewConfig>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="@{/}" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link href="../../static/css/main.css" th:href="@{/css/amazeui.min.css}" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="web/css/menu.css" th:href="@{/css/menu.css}">
+    <link rel="stylesheet" href="web/css/public.css" th:href="@{/css/public.css}">
+    <link rel="stylesheet" href="web/css/body.css" th:href="@{/css/body.css}">
+	<link rel="stylesheet" href="web/css/jquery.pagewalkthrough.css" th:href="@{/css/jquery.pagewalkthrough.css}">
+
+   <!--[if lt IE 9]>
+	<script th:src="@{/js/html5.js}"></script>
+	<![endif]-->
+	<style type="text/css">
+	.demo{text-align:center}
+	.button {display: inline-block;outline: none;cursor: pointer;text-align: center;text-decoration: none;font: 22px/100% 'Microsoft yahei',Arial, Helvetica, sans-serif;padding: .5em 2em .55em;text-shadow: 0 1px 1px rgba(0,0,0,.3);-webkit-border-radius: .5em; -moz-border-radius: .5em;border-radius: .5em;-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+	.button:hover {text-decoration: none;}
+	.button:active {position: relative;top: 1px;}
+	/* green */
+	.green {color: #e8f0de;border: solid 1px #538312;background: #64991e;background: -webkit-gradient(linear, left top, left bottom, from(#7db72f), to(#4e7d0e));background: -moz-linear-gradient(top,  #7db72f,  #4e7d0e);filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#7db72f', endColorstr='#4e7d0e');}
+	.green:hover {background: #538018;background: -webkit-gradient(linear, left top, left bottom, from(#6b9d28), to(#436b0c));background: -moz-linear-gradient(top,  #6b9d28,  #436b0c);filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#6b9d28', endColorstr='#436b0c');color:#fff}
+	.green:active {color: #a9c08c;background: -webkit-gradient(linear, left top, left bottom, from(#4e7d0e), to(#7db72f));background: -moz-linear-gradient(top,  #4e7d0e,  #7db72f);filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#4e7d0e', endColorstr='#7db72f');}
+	#walkthrough-content{display:none}
+	#walkthrough-content h3{height:30px; line-height:30px}
+	#walkthrough-content p{line-height:28px}
+	</style>
+
+    <title >首页</title>
+   
+</head>
+<body>
+
+<header class="layout-north"  id="_header">
+    <img class="am-margin-left menu-logo" th:src="@{/images/logo3.png}">
+    <div class="am-fr">
+        <div class="menu-head am-text-sm am-padding-right-sm">
+            <div class="am-fl menu-head-list">
+                <div class="am-fl menu-app menu-message-list">
+                    <ul>
+                        <li class="" id="userInfoLI">
+                            <a class="am-fl" href="javascript:void (0)" id="userInfo"> </a>
+                            <div style="position: absolute;top:38px;left: -100px; height:auto;min-width: 280px;">
+                                <div class="am-dropdown-content am-text-left" style="min-width: 300px;height:300px;">
+                                    <p class="menu-yh am-margin-0">
+                                        <span class="menu-touxiang">
+                                            <img th:src="@{/images/touxiang.png}">
+                                        </span>
+                                        <span class="menu-huiyuan" id="deptInfo"></span>
+                                        <span class="menu-zhuxiao am-text-right">
+                                            <a class="am-btn am-btn-sm " href="javascript:logOut()"><img th:src="@{/images/zhuxiao-icon.png}"> 注销</a>
+                                        </span>
+										<div class="am-cf"></div>
+                                    </p>
+                                    <div class="am-text-center am-margin-top am-padding-bottom am-padding-top-sm" style="border-top: 1px solid #ddd;" id="qrcode">
+                                        <img class="" th:src="@{/images/ewm.png}">
+                                    </div>
+                                    <span class="am-text-xs am-text-center am-block">我的专属推广二维码，微信扫一扫分享朋友圈</span>
+                                </div>
+
+                            </div>
+                            
+                        </li>
+                    </ul>
+                </div>
+
+
+                </div>
+               <div class="am-fl menu-head-list">
+                <div class="am-fl menu-app menu-message-list">
+                    <ul>
+                        <li class="menu-app-info">
+                            <a class="am-fl menu-app-info-a" href="javascript:void (0)">消息 <span class="am-text-truncate" id="unreadCnt"></span> </a>
+                            <div style="position: absolute;top:38px;left: -100px;z-index: 9999">
+                                <div class="am-dropdown-content menu-info-content am-text-center">
+                                    <ul class="menu-info" id="noticespro">
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+           <div class="am-fl menu-head-list" style="display:none;" id="divHyh">
+                <div class="am-fl menu-app menu-message-list" onmouseover="myLayout.allowOverflow(this)" onmouseout="myLayout.resetOverflow('north')" >
+                    <ul>
+                        <li class="menu-app-info">
+                            <a class="am-fl" href="javascript:void (0)">会员号：<span id="hycode" style="color:#ff9528;font-weight: bold;"></span> </a> 
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="am-fl menu-head-list">
+                 <a class="menu-app-password-a" href="javascript:void(0)" data-am-modal="{target: '#modifyLoginPWD', closeViaDimmer: 0, width: 600, height: 330}">修改密码</a>
+            </div>
+            <div class="am-fl menu-head-list2"> 
+                <span  class="" onclick="javascript:TMin()"><img th:src="@{/images/menu-icon04.png}" id="btn_min"></span>
+                <!-- <span class=""><img src="web/images/menu-icon05.png"></span> -->
+                <span class="" onclick="javascript:TExit()"><img th:src="@{/images/menu-icon06.png}" id="btn_exit" ></span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<DIV class="layout-center" id="Maincontent">
+    <div class="am-tabs wl-tabs" data-am-tabs="{noSwipe: 1}" id="pageTabs">
+        <ul class="am-tabs-nav am-nav am-nav-tabs"> 
+            <li id="tab-first" class="am-active"><a href="javascript:void(0)">首页</a></li> 
+        </ul>
+
+        <div class="am-tabs-bd">
+             <div class="am-tab-panel am-active" id="ifr-first">
+                <iframe src="" width="100%" height="98%" scrolling="yes"></iframe>
+             </div> 
+        </div>
+    </div>
+    <br />
+     
+    
+</DIV>
+
+<DIV class="layout-west" id="layout-west">
+    <div class="memu">
+        <div class="menu-left">
+            <div class="menu-left-list1">
+                <img th:src="@{/images/menu-icon01.png}">
+            </div>
+            <section data-am-widget="accordion" class="am-accordion am-margin-0 memu-section" data-am-accordion='{}' id="menuTree">
+                 
+            </section>
+        </div>
+    </div>
+</DIV>
+
+<!-- 右下角普通消息提示 -->
+<div class="am-popup menu-popup" id="messagePop">
+    <div class="am-popup-inner">
+        <div class="am-popup-hd">
+            <h4 class="am-popup-title" id="popTitle"> </h4>
+            <span data-am-modal-close class="am-close">&times;</span>
+        </div>
+        <div class="am-popup-bd" id="popContent"> </div>
+    </div>
+</div>
+<!-- 消息弹屏 -->
+<div class="am-modal wl-modal-con" tabindex="-1" id="messageBomb">
+     <div class="am-modal-dialog">
+        <div class="am-modal-hd">
+            <span class="wl-fhxx-title am-text-default" id="bombTitle"></span>
+            <span class="c999 pleft10" id="bombSendTime"> </span>
+            <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            <div class="am-divider-default am-margin-top-xs mright10"></div>
+        </div>
+        <div class="am-modal-bd am-margin-0">
+            <div class="border-ddd am-text-sm c333 p10 wl-modal-cond" id="bombContent">
+               
+            </div>
+        </div>
+    </div>  
+</div>
+    
+<div class="am-modal menu-modal" tabindex="-1" id="modifyLoginPWD">
+    
+    <div class="am-modal-dialog bg-white">
+        <div class="am-modal-hd"><span>修改登录密码</span>
+            <a href="javascript: void(0)" class="am-close am-close-spin" id="modifyLoginPWDClose">&times;</a>
+        </div>
+        <div class="am-modal-bd am-padding-0 am-margin-0 border-bottom-none">
+            <div class="am-form menu-password c333 am-text-sm">
+            <form id="modifyLoginPWDForm" >
+                <div class="menu-password-money">
+                    <span class="am-text-right">原密码：</span>
+                    <input id="modifyOrginPwd" type="password" placeholder="请输入原密码">
+                </div>
+                <div class="menu-password-money">
+                    <span class="am-text-right">新密码：</span>
+                    <input id="modifyNewPwd" type="password" placeholder="请设置新密码">
+                </div>
+                <span class="menu-password-back c999 am-text-xs">长度为6到12之间的字母和数字或两者的组合</span>
+                <div class="menu-password-money">
+                    <span class="am-text-right">确认密码：</span>
+                    <input id="modifyNewPwdAgain" type="password" placeholder="请再次输入新密码">
+                </div>
+                <div class="menu-password-submit am-fl">
+                    <a  id="modifyPwdCommit" href="javascript:void(0)" class="am-btn am-btn-sm btn-blue index-title01-btn">提交</a>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<div id="walkthrough-content">
+
+    <div id="walkthrough-2">
+        您的专属推广二维码藏在这里，快点打开查看吧，分享到朋友圈，领取推广红包。
+    </div>
+</div>
+<div class="am-modal" id="pageWindow1">
+    <div class="am-modal-dialog hongbao">
+	<div class="am-modal-hd am-padding-0 am-margin-0">
+            <a href="javascript: void(0)" class="am-close c333" data-am-modal-close></a>
+        </div>
+        <div class="am-modal-bd am-padding-0 am-margin-0 am-text-center">
+            <!-- <img class="hongbao-ewm" src="" id="hongbaoEwmImg"> -->
+            <div class="hongbao-ewm" id="qrcode1"><img class="" th:src="@{/images/hongbao-ewm.png}"></div>
+            
+        </div>
+        <div class="am-modal-footer am-text-sm">
+        	<p class="t20">恭喜你获得新用户红包<br />
+赶快微信扫一扫领取吧</p>
+        </div>
+    </div>
+</div>
+
+<script id="tplMenuTree" type="text/html">
+{{each menus as menu i}} 
+   <dl onclick="oprTreeTop(this,event)" class="am-accordion-item am-margin-0 {{if i == 0}}am-active{{/if}}" id="{{menu.code}}">
+        <dt class="am-accordion-title"> <span></span>{{menu.name}} </dt>
+        <dd class="am-accordion-bd am-collapse {{if i == 0}}am-in{{/if}}">
+         
+        {{each menu.children as menu1 j}}
+           <div class="am-accordion-content">
+                 <div class="am-panel-group memu-panel" id="accordion_{{menu1.code}}">
+                    <div class="am-panel {{if i == 0 && j==0}}am-margin-bottom-0{{/if}}">
+                       <div class="am-panel-hd {{if i == 0 && j==0}}am-padding-top-sm am-padding-bottom-sm{{/if}}">
+                          <h4 onclick="collapse(event,'otree_{{i}}_{{j}}',this)" class="am-panel-title {{if j == 0}}am-active{{/if}}{{if j > 0}}am-collapsed{{/if}} " data-am-collapse="{parent: '#accordion_{{menu1.code}}'}">
+                               <span></span>{{menu1.name}} 
+                          </h4>
+                          
+                          <div id="otree_{{i}}_{{j}}" class="am-padding-0 am-panel-collapse am-collapse {{if j == 0}}am-in{{/if}}">
+                              <div class="am-panel-bd am-padding-0">
+                                  <ul class="menu-list">
+                                      {{each menu1.children as menu2 k}}
+                                         <li id="mli_{{menu2.code}}" onclick="addTab('{{menu2.name}}','{{menu2.url}}','{{menu2.code}}',this,event)"><a href="javascript:void (0)">{{menu2.name}} </a></li>
+                                      {{/each}} 
+                                  </ul>
+                              </div>
+                          </div> 
+                          
+                     </div>
+                   </div>
+                  </div>               
+            </div>
+          </div>
+        {{/each}}  
+        </dd>
+   </dl> 
+{{/each}}
+</script>
+
+<script id="tplTabLable" type="text/html">
+    <li class="am-active" id="tab-{{code}}"><span class="tab-close"></span><a onclick="clickTab('{{code}}')"  href="javascript:void(0)">{{name}}</a></li> 
+</script>
+
+<script id="tplTabContent" type="text/html"> 
+     <div class="am-tab-panel am-active" id="ifr-pdiv-{{code}}"> 
+        <iframe name="name_ifr_{{code}}" src="{{url}}" width="100%" height="98%" scrolling="yes"></iframe>
+    </div> 
+</script>
+
+<script id="tplunameInfo" type="text/html">
+   {{userName}} <span class="am-icon-angle-down am-icon-sm"></span> 
+</script>
+<script id="tpldeptInfo" type="text/html">
+{{deptName}}
+</script>
+
+<script id="tplnoticepro" type="text/html">
+   <li id="stationNotice" class="menu-app-info-h">站内消息通知</li>
+   {{each notices as notice i}} 
+      {{if i<3}}
+         <li onclick="readNotice('{{notice.recv_name}}',{{notice.serino}},'{{notice.title}}','{{notice.sendTime}}','{{notice.content}}','{{notice.isRead}}')"><a href="javascript:void(0)">{{notice.title}}</a><span>{{notice.sendTime}}</span></li>
+      {{/if}}
+   {{/each}}  
+   <li class="menu-app-info-more" onclick="moreNotice()"><a href="javascript:void (0)">查看更多</a></li>
+</script>   
+
+
+<script id="tplnoticeItem" type="text/html">
+   <li onclick="readNotice('{{notice.recv_name}}',{{notice.serino}},'{{notice.title}}','{{notice.sendTime}}','{{notice.content}}''{{notice.isRead}}')"><a href="javascript:void(0)">{{notice.title}}</a><span>{{notice.sendTime}}</span></li>
+</script> 
+
+
+
+<div >
+    <div >
+        <div >
+            <span>欢迎您，<em th:text="${user.username}">用户（name）</em>！</span>
+            <a href="javascript:void(0)" id="logout">[退出]</a>
+        </div>
+    </div>
+
+</div>
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script th:src="@{/js/jquery.min.js}"></script>
+<!--<![endif]-->
+
+<!--[if lte IE 8 ]>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script th:src="@{/js/amazeui.ie8polyfill.min.js}"></script>
+<![endif]-->
+<script th:src="@{/js/amazeui.min.js}"></script>  
+<script th:src="@{/js/template.js}"></script> 
+<script th:src="@{/js/amazeui-message-pop.js}"></script>
+<script th:src="@{/js/common.js}"></script> 
+<script th:src="@{/js/websocket.js}"></script> 
+<script th:src="@{/js/index.js}"></script>  
+<script type="text/javascript" th:src="@{/js/jquery.pagewalkthrough.min.js}"></script>
+<script th:src="@{/js/jquery-ui.min.js}"></script>
+<script th:src="@{/js/qrcode.js}"></script>
+</body>
+</html>
